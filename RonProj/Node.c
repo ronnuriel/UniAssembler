@@ -43,12 +43,11 @@ Node* initNode(void* data, Node* next)
 	return newNode;
 }
 
-/* freeNode FREES data! */
+/* freeNode does not free data! */
 void freeNode(Node* node)
 {
 	if (!node)
 		return;
 
-	free(node->data);
 	free(node);
 }

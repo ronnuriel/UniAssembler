@@ -19,15 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HelperFunc.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Operator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HelperFunc.c" />
     <ClCompile Include="List.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Node.c" />
     <ClCompile Include="Operator.c" />
+    <ClCompile Include="Symbol.c" />
+    <ClCompile Include="Symbol.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

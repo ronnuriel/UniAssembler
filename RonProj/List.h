@@ -8,5 +8,8 @@ typedef struct {
 	int length;
 } List;
 
+List* initList();
+void addToList(void* data, List* list);
+void freeList(List* list);
 
 #endif 

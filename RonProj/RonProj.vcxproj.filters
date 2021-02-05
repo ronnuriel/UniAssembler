@@ -24,6 +24,9 @@
     <ClInclude Include="Operator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HelperFunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.c">
@@ -36,6 +39,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="List.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HelperFunc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

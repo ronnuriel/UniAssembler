@@ -43,7 +43,7 @@ Node* initNode(void* data, Node* next)
 	return newNode;
 }
 
-// freeNode FREES data!
+/* freeNode FREES data! */
 void freeNode(Node* node)
 {
 	if (!node)

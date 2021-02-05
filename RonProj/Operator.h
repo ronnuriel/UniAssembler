@@ -44,8 +44,8 @@ typedef struct
 	int opcode;
 	int funct;
 	char* name;
-	unsigned char sourceOperandAddrMethods; // bitwise storage
-	unsigned char destOperandAddrMethods; // bitwise storage
+	unsigned char sourceOperandAddrMethods; /* bitwise storage */
+	unsigned char destOperandAddrMethods; /* bitwise storage */
 } OperatorData;
 
 extern OperatorData operators[];

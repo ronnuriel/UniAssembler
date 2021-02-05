@@ -43,17 +43,16 @@ OperatorData operators[NUM_OF_OPERATORS] = {
 
 OperatorsEnum operatorStringToEnum(char* str)
 {
-	
 	if (!str)
 		return OPERATOR_INVALID;
-
-	for (int i = 0; i < NUM_OF_OPERATORS; i++)
+	int i;
+	for (i = 0; i < NUM_OF_OPERATORS; i++)
 	{
-		if (!strcmp(str, operatorsNames[i])) // found a match
+		if (!strcmp(str, operatorsNames[i])) /* found a match */
 			return (OperatorsEnum)i;
 	}
 
-	// didn't find a match
+	/* didn't find a match */
 	return OPERATOR_INVALID;
 }
 

@@ -19,15 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="List.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="Operator.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="List.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Node.c" />
     <ClCompile Include="Operator.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="List.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="Operator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -35,3 +35,4 @@ int isValid(char* symbol) {
 	return 1;
 }
 
+

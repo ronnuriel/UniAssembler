@@ -13,3 +13,21 @@ int isAlphaNumeric(char ch)
 {
 	return (isLetter(ch) || isNumeric(ch));
 }
+
+/* checks if the number is vaild */
+int isValidSignum(char ch)
+{
+	return(ch == '+' || ch == "-");
+}
+
+int isVaildNum(char* str)
+{
+	int i;
+	for (i = 0; i < sizeof(str); ++i)
+	{
+		if (!isValidSignum(str[i]) && !isNumeric(str[i])) {
+			return 0;
+		}
+	}
+	return 1; 
+}

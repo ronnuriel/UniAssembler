@@ -22,7 +22,7 @@ void addToList(void* data, List* list) {
 	{
 		Node* t = list->head;
 		while (t->next) {
-			t = getNextNode(t);
+			t = getNodeNext(t);
 		}
 
 		setNodeNext(t, initNode(data, NULL));
@@ -34,7 +34,7 @@ void addToList(void* data, List* list) {
 
 
 
-void freeList(List* list) {
+void freeList(List* list, void deleter(void *)) {
 
 	if (!list) 
 		return;
@@ -43,8 +43,9 @@ void freeList(List* list) {
 	
 	while (t)
 	{
+		deleter(t->data);
 		Node* del = t;
-		t = getNextNode(t);
+		t = getNodeNext(t);
 		freeNode(del);
 	}
 

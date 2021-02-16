@@ -1,14 +1,15 @@
-
 #include "HelperFunc.h"
 #include "Operator.h"
+#include "Register.h"
+#include <string.h>
 #define MAX_SYMBOL_LEN 31
 
-int isValid(char* symbol) {
+int isValidSymbolName(char* symbol) {
 	if (!symbol) 
 		return 0;
 
 	/* check length */
-	if (sizeof(symbol) > MAX_SYMBOL_LEN || sizeof(symbol) == 0)
+	if (strlen(symbol) > MAX_SYMBOL_LEN || strlen(symbol) == 0)
 		return 0;
 
 	/* check first letter */

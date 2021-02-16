@@ -6,18 +6,12 @@
 
 
 /* check if the Register is valid  */
-int isValidRegister(char* str) 
+int isValidRegisterName(char* str) 
 {
-	if (sizeof(str) != REGISTER_LEN) {
-		return 0;
-	}
-	if (isNumeric(str[1]))
-	{
-		return(str[0] == 'r'&& str[1]<=MAX_REGISTER_NUM);
-	}
-	return 0;
-
-
-	
-	
+	return (sizeof(str) == REGISTER_LEN &&
+		    str[0] == 'r' && 
+		    isNumeric(str[1]) && 
+		    charDigitToInt(str[1]) <= MAX_REGISTER_NUM);
 }
+	
+

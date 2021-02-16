@@ -24,6 +24,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="Operator.h" />
     <ClInclude Include="Register.h" />
+    <ClInclude Include="SymbolList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HelperFunc.c" />
@@ -34,6 +35,7 @@
     <ClCompile Include="Register.c" />
     <ClCompile Include="Symbol.c" />
     <ClCompile Include="Symbol.h" />
+    <ClCompile Include="SymbolList.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

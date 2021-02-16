@@ -2,6 +2,6 @@
 #define REGISTER_FUNC_H
 
 /* check Ron */
-int isValidRegister(char* str);
+int isValidRegisterName(char* str);
 
 #endif

@@ -5,8 +5,9 @@ int isLetter(char ch);
 int isNumeric(char ch);
 int isAlphaNumeric(char ch);
 
-/* check Ron */
-int isValidSignum(char ch);
+
+int isValidNumericSign(char ch);
 int isVaildNum(char* str);
 
+int charDigitToInt(char digit);
 #endif

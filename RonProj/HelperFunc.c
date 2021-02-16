@@ -6,7 +6,6 @@ int isLetter(char ch)
 }
 int isNumeric(char ch) {
 	return (ch >= '0' && ch <= '9');
-
 }
 
 int isAlphaNumeric(char ch) 
@@ -15,20 +14,33 @@ int isAlphaNumeric(char ch)
 }
 
 /* checks if the number is vaild */
-int isValidSignum(char ch)
+int isValidNumericSign(char ch)
 {
-	return(ch == '+' || ch == "-");
+	return(ch == '+' || ch == '-');
 }
 
 int isVaildNum(char* str)
 {
+	if (!str || strlen(str) == 0) 
+		return 0;
+	if (isValidNumericSign(str[0]) && strlen(str) == 1)
+		return 0;
+
+	if (!isValidNumericSign(str[0]) && !isNumeric(str[0])) // first char not +,-, or digit
+		return 0;
+
 	int i;
-	for (i = 0; i < sizeof(str); ++i)
+	for (i = 1; i < strlen(str); ++i)
 	{
-		if (!isValidSignum(str[i]) && !isNumeric(str[i])) {
+		if (!isNumeric(str[i])) {
 			return 0;
 		}
 	}
 
 	return 1; 
+}
+
+int charDigitToInt(char digit)
+{
+	return digit - '0';
 }

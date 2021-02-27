@@ -40,7 +40,7 @@ void freeList(List* list, void deleter(void *)) {
 		return;
 
 	Node* t = list->head;
-	
+
 	while (t)
 	{
 		deleter(t->data);

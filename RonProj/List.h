@@ -10,6 +10,7 @@ typedef struct {
 
 List* initList();
 void addToList(void* data, List* list);
+
 void freeList(List* list, void deleter(void*));
 
 #endif 

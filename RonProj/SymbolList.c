@@ -1,4 +1,4 @@
-
+#define _CRT_SECURE_NO_WARNINGS
 #include "SymbolList.h"
 #include <stdlib.h>
 #include <string.h>
@@ -25,7 +25,7 @@ SymbolListRow* createSymbolListRow(char* name, int value, SymbolAttributesEnum a
 	return ret;
 }
 
-void freeSymboleListRow(SymbolListRow* row)
+void freeSymbolListRow(SymbolListRow* row)
 {
 	if (!row)
 		return;
@@ -55,4 +55,41 @@ SymbolList* initSymbolList()
 		free(ret);
 		return NULL;
 	}
+}
+SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name)
+{
+	if (!slist)
+		return NULL;
+
+	Node* t = slist->list->head;
+
+	while (t)
+	{
+		SymbolListRow* row = t->data;
+		if (isRowNameMatch(name, row))
+		{
+			return row;
+		}
+		t = getNodeNext(t);
+		
+	}
+
+	return NULL;
+}
+
+void addSymbolToList(SymbolList* slist, char* name, int value, SymbolAttributesEnum attributes)
+{
+	if (!slist || !name)
+		return;
+
+	addToList((void*)createSymbolListRow(name, value, attributes), slist->list);
+}
+
+void freeSymbolList(SymbolList* slist)
+{
+	if (!slist)
+		return;
+
+	freeList(slist->list, freeSymbolListRow);
+	free(slist);
 }

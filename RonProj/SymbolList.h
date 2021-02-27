@@ -25,11 +25,14 @@ typedef struct {
 } SymbolList;
 
 SymbolListRow* createSymbolListRow(char* name, int value, SymbolAttributesEnum attributes);
-void freeSymboleListRow(SymbolListRow* row);
+void freeSymbolListRow(SymbolListRow* row);
 
 // returns 1 if match
 int isRowNameMatch(char* name, SymbolListRow* row);
+SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name);
 
 SymbolList* initSymbolList();
+void addSymbolToList(SymbolList* slist, char* name, int value, SymbolAttributesEnum attributes);
 void freeSymbolList(SymbolList* slist);
+
 #endif

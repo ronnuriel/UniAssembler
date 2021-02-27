@@ -1,6 +1,7 @@
 #ifndef SYMBOL_LIST_H
 #define SYMBOL_LIST_H
 
+#include "List.h"
 
 typedef enum
 {
@@ -16,8 +17,19 @@ typedef enum
 typedef struct {
 	char* name;
 	int value;
-	int attributes;
-} SymbolListColumn;
+	SymbolAttributesEnum attributes;
+} SymbolListRow;
 
-List* initList();
+typedef struct {
+	List* list;
+} SymbolList;
+
+SymbolListRow* createSymbolListRow(char* name, int value, SymbolAttributesEnum attributes);
+void freeSymboleListRow(SymbolListRow* row);
+
+// returns 1 if match
+int isRowNameMatch(char* name, SymbolListRow* row);
+
+SymbolList* initSymbolList();
+void freeSymbolList(SymbolList* slist);
 #endif

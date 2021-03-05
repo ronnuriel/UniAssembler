@@ -2,7 +2,7 @@
 #define SYMBOL_LIST_H
 
 #include "List.h"
-
+/* checked */
 typedef enum
 {
 	CODE = 0x1,
@@ -17,22 +17,25 @@ typedef enum
 typedef struct {
 	char* name;
 	int value;
-	SymbolAttributesEnum attributes;
+	unsigned char attributes;
 } SymbolListRow;
 
 typedef struct {
 	List* list;
 } SymbolList;
 
-SymbolListRow* createSymbolListRow(char* name, int value, SymbolAttributesEnum attributes);
+/* Symbol List Row*/
+SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attributes);
 void freeSymbolListRow(SymbolListRow* row);
+
 
 // returns 1 if match
 int isRowNameMatch(char* name, SymbolListRow* row);
-SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name);
 
+
+/* Symbol List */
 SymbolList* initSymbolList();
-void addSymbolToList(SymbolList* slist, char* name, int value, SymbolAttributesEnum attributes);
+void addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes);
 void freeSymbolList(SymbolList* slist);
-
+SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name);
 #endif

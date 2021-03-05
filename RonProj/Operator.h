@@ -1,6 +1,7 @@
 #ifndef OPERATOR_H
 #define OPERATOR_H
 
+/* check */
 typedef enum
 {
 	OPERATOR_INVALID = -1,

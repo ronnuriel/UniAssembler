@@ -1,7 +1,7 @@
 #ifndef  REGISTER_FUNC_H
 #define REGISTER_FUNC_H
 
-/* check Ron */
+/* checked */
 int isValidRegisterName(char* str);
 
 #endif

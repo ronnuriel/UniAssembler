@@ -2,7 +2,7 @@
 #include "Operator.h"
 #include <string.h>
 
-char operatorsNames[][NUM_OF_OPERATORS] = {
+static char operatorsNames[][NUM_OF_OPERATORS] = {
 	"mov",
 	"cmp",
 	"add",
@@ -21,7 +21,7 @@ char operatorsNames[][NUM_OF_OPERATORS] = {
 	"stop"
 };
 
-OperatorData operators[NUM_OF_OPERATORS] = {
+static OperatorData operators[NUM_OF_OPERATORS] = {
 	{0, -1, operatorsNames[MOV], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
 	{1, -1, operatorsNames[CMP], IMMEDIATE | DIRECT | REGISTER_DIRECT, IMMEDIATE | DIRECT | REGISTER_DIRECT},
 	{2, 10, operatorsNames[ADD], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},

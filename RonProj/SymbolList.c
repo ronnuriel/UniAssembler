@@ -2,7 +2,7 @@
 #include "SymbolList.h"
 #include <stdlib.h>
 #include <string.h>
-SymbolListRow* createSymbolListRow(char* name, int value, SymbolAttributesEnum attributes)
+SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attributes)
 {
 	if (!name)
 		return NULL;
@@ -77,7 +77,7 @@ SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name)
 	return NULL;
 }
 
-void addSymbolToList(SymbolList* slist, char* name, int value, SymbolAttributesEnum attributes)
+void addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes)
 {
 	if (!slist || !name)
 		return;

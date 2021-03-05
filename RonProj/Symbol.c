@@ -1,6 +1,8 @@
 #include "HelperFunc.h"
 #include "Operator.h"
 #include "Register.h"
+#include "Symbol.h"
+
 #include <string.h>
 #define MAX_SYMBOL_LEN 31
 
@@ -18,7 +20,7 @@ int isValidSymbolName(char* symbol) {
 
 	/* check rest of letters */
 	int i;
-	for (i = 1; i < sizeof(symbol); ++i)
+	for (i = 1; i < strlen(symbol); ++i)
 	{
 		if (!isAlphaNumeric(symbol[i]))
 			return 0;
@@ -29,7 +31,7 @@ int isValidSymbolName(char* symbol) {
 		return 0;
 
 	/* check if matches operator */
-	if (!isValidRegisterName(symbol))
+	if (isValidRegisterName(symbol))
 		return 0;
 
 	/* everything okay */

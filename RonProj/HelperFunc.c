@@ -1,5 +1,11 @@
 #include "HelperFunc.h"
-
+#include <stdlib.h>
+#include <string.h>
+#define AS_STR ".as"
+#define OB_STR ".ob"
+#define ENT_STR ".ent"
+#define EXT_STR ".ext"
+#pragma warning(disable: 4996)
 int isLetter(char ch)
 {
 	return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
@@ -43,4 +49,56 @@ int isVaildNum(char* str)
 int charDigitToInt(char digit)
 {
 	return digit - '0';
+}
+
+
+int createFileNames(char* filename, char** as, char** ob, char** ent, char** ext)
+{
+	*as = NULL;
+	*ob = NULL;
+	*ent = NULL;
+	*ext = NULL;
+	do
+	{
+		int origLength = strlen(filename);
+
+		*as = (char*)malloc(origLength + strlen(AS_STR) + 1);
+		if (!(*as))
+			break;
+
+		*ob = (char*)malloc(origLength + strlen(OB_STR) + 1);
+		if (!(*ob))
+			break;
+
+		*ent = (char*)malloc(origLength + strlen(ENT_STR) + 1);
+		if (!(*ent))
+			break;
+
+		*ext = (char*)malloc(origLength + strlen(EXT_STR) + 1);
+		if (!(*ext))
+			break;
+
+		strcpy(*as, filename);
+		strcat(*as, AS_STR);
+
+		strcpy(*ob, filename);
+		strcat(*ob, OB_STR);
+
+		strcpy(*ent, filename);
+		strcat(*ent, ENT_STR);
+
+		strcpy(*ext, filename);
+		strcat(*ext, EXT_STR);
+
+		return 1;
+
+	} while (0);
+
+	// error occured
+	free(as);
+	free(ob);
+	free(ent);
+	free(ext);
+
+	return 0;
 }

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compiler.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="HelperFunc.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Node.h" />
@@ -27,6 +29,8 @@
     <ClInclude Include="SymbolList.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Compiler.c" />
+    <ClCompile Include="File.c" />
     <ClCompile Include="HelperFunc.c" />
     <ClCompile Include="List.c" />
     <ClCompile Include="Main.c" />

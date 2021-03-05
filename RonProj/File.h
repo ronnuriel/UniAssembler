@@ -7,7 +7,7 @@
 
 int openInputFile(char* path);
 void closeInputFile();
-int readNextLine(char* str);
-
+int readNextLine(char* str, int maxLength);
+int rewindInputFile();
 
 #endif

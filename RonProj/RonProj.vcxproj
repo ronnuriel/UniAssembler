@@ -25,6 +25,7 @@
     <ClInclude Include="List.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Operator.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="Register.h" />
     <ClInclude Include="SymbolList.h" />
   </ItemGroup>
@@ -36,6 +37,7 @@
     <ClCompile Include="Main.c" />
     <ClCompile Include="Node.c" />
     <ClCompile Include="Operator.c" />
+    <ClCompile Include="Parser.c" />
     <ClCompile Include="Register.c" />
     <ClCompile Include="Symbol.c" />
     <ClCompile Include="Symbol.h" />

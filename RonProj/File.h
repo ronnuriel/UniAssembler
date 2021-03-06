@@ -10,4 +10,7 @@ void closeInputFile();
 int readNextLine(char* str, int maxLength);
 int rewindInputFile();
 
+
+int createFileNames(char* filename, char** as, char** ob, char** ent, char** ext);
+
 #endif

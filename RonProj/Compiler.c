@@ -43,11 +43,14 @@ int compileFile(char* inputFilePath)
 		case INSTRUCTION_LINE:
 		{
 			parseIntruction(line);
+			//TODO: instruction
 			break;
 		}
 		case OPERATION_LINE:
 		{
 			parseOperation(line);
+			//int isSourceAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
+			//int isDestAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 			break;
 		}
 		}

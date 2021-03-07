@@ -62,8 +62,8 @@ Operation parseOperation(char* line)
 		if (!isValidSymbolName(label))
 		{
 			/* Error: invalid label */
-			printf("invalid symbol\n");
-			//return 0;
+			ret.error = 2;
+			return ret;
 		}
 		strcpy(ret.label, label);
 		/* prepeare line for next parsing */
@@ -83,11 +83,11 @@ Operation parseOperation(char* line)
 	if (ret.opcode == OPERATOR_INVALID)
 	{
 		/* Error: invalid operand */
-		printf("invalid opcode\n");
-		//return 0;
+		ret.error = 3;
+		return ret;
 	}
 
-	printf("opcode:%s.\n", opcodeStr);
+	
 
 	
 
@@ -97,7 +97,7 @@ Operation parseOperation(char* line)
 
 		operand1 = removeLeadingSpaces(operand1);
 		removeTrailingSpaces(operand1);
-		printf("1:%s.\n", operand1);
+		
 
 
 		operand2 = strtok(NULL, "");

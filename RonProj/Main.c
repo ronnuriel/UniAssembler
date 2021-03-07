@@ -5,6 +5,8 @@
 #include "Operator.h"
 int main(int argc, char** argv)
 {
-	
+
 	//stripOperandData
+	char c[] = "LABEL: bne";
+	Operation o = parseOperation(c);
 }

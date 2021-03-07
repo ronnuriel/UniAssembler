@@ -1,6 +1,6 @@
 #ifndef OPERATOR_H
 #define OPERATOR_H
-
+#include "Register.h"
 /* check */
 typedef enum
 {
@@ -32,11 +32,12 @@ OperatorsEnum operatorStringToEnum(char* str);
 
 typedef enum 
 {
+	NONE = 0,
 	IMMEDIATE = 0x1,
 	DIRECT = (0x1<<1),
 	RELATIVE = (0x1 << 2),
-	REGISTER_DIRECT = (0x1 << 3)
-
+	REGISTER_DIRECT = (0x1 << 3),
+	INVALID_ADDR_METHOD = (0x1 << 7)
 } AddrMethodEnum;
 
 
@@ -58,4 +59,7 @@ int isSourceAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 int isDestAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 
 OperatorData* getOperatorDataByEnum(OperatorsEnum op);
+
+AddrMethodEnum detectOperandType(char* str);
+
 #endif

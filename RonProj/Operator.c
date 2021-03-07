@@ -87,3 +87,31 @@ OperatorData* getOperatorDataByEnum(OperatorsEnum op)
 {
 	return &operators[op];
 }
+
+AddrMethodEnum detectOperandType(char* str)
+{
+	if (isValidRegisterName(str))
+		return REGISTER_DIRECT;
+
+	if (str[0] == '#')
+	{
+		if (isVaildNum(str + 1))
+			return IMMEDIATE;
+		else
+			return INVALID_ADDR_METHOD;
+	}
+	if (str[0] == '%')
+	{
+		if (isValidSymbolName(str + 1))
+			return RELATIVE;
+		else
+			return INVALID_ADDR_METHOD;
+	}
+	/* suspect direct*/
+	if (isValidSymbolName(str))
+		return DIRECT;
+	else
+		return INVALID_ADDR_METHOD;
+
+		 
+}

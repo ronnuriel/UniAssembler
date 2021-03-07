@@ -69,3 +69,29 @@ char* removeLeadingSpaces(char* str)
 
 	return str;
 }
+
+
+void removeTrailingSpaces(char* str)
+{
+	int i;
+
+	for (i = strlen(str) - 1; i >= 0 && isWhiteSpace(str[i]); i--);
+	str[i + 1] = '\0';
+ 
+}
+
+// Function to remove all spaces from a given string 
+void removeSpaces(char* str)
+{
+	// To keep track of non-space character count 
+	int count = 0;
+
+	// Traverse the given string. If current character 
+	// is not space, then place it at index 'count++' 
+	int i;
+	for(i=0; str[i]; i++)
+		if (str[i] != ' ')
+			str[count++] = str[i]; // here count is 
+								   // incremented 
+	str[count] = '\0';
+}

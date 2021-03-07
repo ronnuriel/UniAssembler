@@ -16,4 +16,6 @@ int charDigitToInt(char digit);
 
 int isWhiteSpacesLine(char* str);
 char* removeLeadingSpaces(char* str);
+void removeTrailingSpaces(char* str); 
+void removeSpaces(char* str);
 #endif

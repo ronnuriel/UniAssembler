@@ -4,14 +4,14 @@
 #include "Symbol.h"
 
 #include <string.h>
-#define MAX_SYMBOL_LEN 31
+
 
 int isValidSymbolName(char* symbol) {
 	if (!symbol) 
 		return 0;
 
 	/* check length */
-	if (strlen(symbol) > MAX_SYMBOL_LEN || strlen(symbol) == 0)
+	if (strlen(symbol) >= MAX_SYMBOL_LEN || strlen(symbol) == 0)
 		return 0;
 
 	/* check first letter */

@@ -42,7 +42,11 @@ int parseIntruction(char* line)
 Operation parseOperation(char* line)
 {
 	Operation ret;
+	ret.error = 0;
 	ret.label[0] = '\0'; // empty label
+	ret.sourceType = NONE;
+	ret.targetType = NONE;
+
 	char *label = NULL,
 		 *opcodeStr = NULL,
 		 *operand1 = NULL,
@@ -95,7 +99,6 @@ Operation parseOperation(char* line)
 		removeTrailingSpaces(operand1);
 		printf("1:%s.\n", operand1);
 
-		
 
 		operand2 = strtok(NULL, "");
 		if (operand2 && !isWhiteSpacesLine(operand2))
@@ -104,18 +107,40 @@ Operation parseOperation(char* line)
 			removeTrailingSpaces(operand2);
 			printf("2:%s.\n", operand2);
 
-			strcpy(ret.source, operand1);
-			strcpy(ret.target, operand2);
+		
 		}
 		else
 		{
-			strcpy(ret.target, operand1);
+			operand2 = NULL;
 		}
 	}
+	else
+	{
+		operand1 = NULL;
+	}
+	// now we know how many operands there is
 
-	/* we have all parts of the line */
+	
+	if (operand1 && operand2)
+	{
+		ret.targetType = detectOperandType(operand2);
+		stripOperandData(ret.target, operand2, ret.targetType);
+		ret.sourceType = detectOperandType(operand1);
+		stripOperandData(ret.source, operand1, ret.sourceType);
+	}
+	else if (operand1)
+	{
+		ret.targetType = detectOperandType(operand1);
+		stripOperandData(ret.target, operand1, ret.targetType);
+	}
+
+	if (ret.sourceType == INVALID_ADDR_METHOD || ret.targetType == INVALID_ADDR_METHOD)
+	{
+		ret.error = 1;
+	}
 
 
 	return ret;
 
 }
+

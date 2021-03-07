@@ -61,5 +61,5 @@ int isDestAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 OperatorData* getOperatorDataByEnum(OperatorsEnum op);
 
 AddrMethodEnum detectOperandType(char* str);
-
+void stripOperandData(char* dest, char* source, AddrMethodEnum);
 #endif

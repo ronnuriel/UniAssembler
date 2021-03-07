@@ -115,3 +115,18 @@ AddrMethodEnum detectOperandType(char* str)
 
 		 
 }
+void stripOperandData(char* dest, char* source, AddrMethodEnum addrMethod)
+{
+	switch (addrMethod)
+	{
+	case DIRECT:
+	case REGISTER_DIRECT:
+		strcpy(dest, source);
+		return;
+
+	case IMMEDIATE:
+	case RELATIVE:
+		strcpy(dest, source+1);
+		return;
+	}
+}

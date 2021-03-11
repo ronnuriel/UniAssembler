@@ -7,6 +7,7 @@ int main(int argc, char** argv)
 {
 
 	//stripOperandData
-	char c[] = "LABEL: bne";
-	Operation o = parseOperation(c);
+	char c[] = "LABEL: .data 1,+2,-3";
+	Instruction o = parseIntruction(c);
+	
 }

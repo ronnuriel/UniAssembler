@@ -43,10 +43,10 @@ Instruction parseIntruction(char* line)
 	Instruction ret;
 	ret.error = 0;
 	ret.label[0] = '\0'; // empty label
-	ret.str[0] = '\0';
+	
 	ret.type = INST_TYPE_INVALID;
-	ret.arr = NULL;
-	ret.arrayLen = 0;
+	ret.params = NULL;
+	ret.numParams = 0;
 
 	char* label = NULL;
 
@@ -84,7 +84,7 @@ Instruction parseIntruction(char* line)
 	{
 	case INST_TYPE_DATA:
 	{
-		if (line[0] == ',' || line[strlne(line) - 1] == ',')
+		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
 			// comma at start or end. error
 		}
@@ -169,7 +169,7 @@ Instruction parseIntruction(char* line)
 	
 	case INST_TYPE_STRING:
 	{
-		if (line[0] == '\"' || line[strlen(line) - 1] == '\"')
+		if (line[0] != '\"' || line[strlen(line) - 1] != '\"')
 		{
 			/* Error: invalid data string */
 			ret.error = 5;

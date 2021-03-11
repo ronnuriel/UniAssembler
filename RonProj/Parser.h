@@ -2,6 +2,7 @@
 #define PARSER_FUNC
 #include "Symbol.h"
 #include "Operator.h"
+#include "Instruction.h"
 typedef enum 
 {
 	INVALID_LINE = -1, 
@@ -22,9 +23,18 @@ typedef struct
 	char target[MAX_SYMBOL_LEN];
 } Operation;
 
+typedef struct
+{
+	int error;
+	char label[MAX_SYMBOL_LEN];
+	InstructionTypeEnum type;
+	
+	char** params;
+	int numParams;
+} Instruction;
 LineTypeEnum detectLineType(char* line);
 
-int parseIntruction(char* line);
+Instruction parseIntruction(char* line);
 Operation parseOperation(char* line);
 
 AddrMethodEnum detectOperandType(char* str);

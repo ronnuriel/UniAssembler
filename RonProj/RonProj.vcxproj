@@ -22,6 +22,7 @@
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="HelperFunc.h" />
+    <ClInclude Include="Instruction.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Operator.h" />
@@ -33,6 +34,7 @@
     <ClCompile Include="Compiler.c" />
     <ClCompile Include="File.c" />
     <ClCompile Include="HelperFunc.c" />
+    <ClCompile Include="Instruction.c" />
     <ClCompile Include="List.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Node.c" />

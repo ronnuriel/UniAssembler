@@ -95,3 +95,14 @@ void removeSpaces(char* str)
 								   // incremented 
 	str[count] = '\0';
 }
+int countOccurrencesInString(char c, char* str)
+{
+	
+	int i, counter = 0;
+	for (i = 0; i < strlen(str); i++)
+		if (str[i] == c)
+			counter++;
+	return counter;
+
+	
+}

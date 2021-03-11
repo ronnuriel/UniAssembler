@@ -4,9 +4,12 @@
 #include "HelperFunc.h"
 #include "Symbol.h"
 #include "Operator.h"
+#include "Instruction.h"
 #include <stdio.h>
 
 #pragma warning(disable: 4996)
+
+
 
 LineTypeEnum detectLineType(char* line)
 {
@@ -35,8 +38,181 @@ LineTypeEnum detectLineType(char* line)
 }
 
 
-int parseIntruction(char* line)
+Instruction parseIntruction(char* line)
 {
+	Instruction ret;
+	ret.error = 0;
+	ret.label[0] = '\0'; // empty label
+	ret.str[0] = '\0';
+	ret.type = INST_TYPE_INVALID;
+	ret.arr = NULL;
+	ret.arrayLen = 0;
+
+	char* label = NULL;
+
+	line = removeLeadingSpaces(line);
+
+	/* search for LABEL*/
+	if (strchr(line, ':'))
+	{
+		label = strtok(line, ":");
+		if (!isValidSymbolName(label))
+		{
+			/* Error: invalid label */
+			ret.error = 2;
+			return ret;
+		}
+		strcpy(ret.label, label);
+		/* prepeare line for next parsing */
+		line = strtok(NULL, "");
+
+		printf("label: %s.\n", label);
+
+	}
+
+
+
+	char *instructionTypeStr = strtok(line, " ");
+	instructionTypeStr = removeLeadingSpaces(instructionTypeStr);
+	removeTrailingSpaces(instructionTypeStr);
+	ret.type = InstructionTypeStringToEnum(instructionTypeStr);
+	
+	line = strtok(NULL, "");
+	line = removeLeadingSpaces(line);
+	removeTrailingSpaces(line);
+	switch (ret.type)
+	{
+	case INST_TYPE_DATA:
+	{
+		if (line[0] == ',' || line[strlne(line) - 1] == ',')
+		{
+			// comma at start or end. error
+		}
+		ret.numParams = countOccurrencesInString(',', line) + 1;
+		ret.params = (char**)malloc(sizeof(char*) * ret.numParams);
+		if (!ret.params)
+		{
+			ret.error = 10;
+			return ret;
+		}
+
+		int i;
+		char* param = strtok(line, ",");
+		for (i = 0; i < ret.numParams; i++)
+		{
+			param = removeLeadingSpaces(param);
+			removeTrailingSpaces(param);
+			if (!isVaildNum(param))
+			{
+				// not a number. deallocate.
+				int j;
+				for (j = 0; j < i; j++)
+					free(ret.params[j]);
+				free(ret.params);
+
+				ret.error = 6;
+				return ret;
+			}
+
+			ret.params[i] = (char*)malloc(strlen(param) + 1);
+			if (!ret.params[i])
+			{
+				//malloc failed. deallocate.
+				int j;
+				for (j = 0; j < i; j++)
+					free(ret.params[j]);
+				free(ret.params);
+
+				ret.error = 10;
+				return ret;
+			}
+			strcpy(ret.params[i], param);
+
+			param = strtok(NULL, ",");
+		}
+		return ret;
+		
+	}
+	case INST_TYPE_ENTRY:
+	case INST_TYPE_EXTERN:
+	{
+		if (!isValidSymbolName(line))
+		{
+			/* Error: invalid data label */
+			ret.error = 5;
+			return ret;
+		}
+		
+		// copy label
+		ret.params = (char**)malloc(sizeof(char*) * 1);
+		if (!ret.params)
+		{
+			// malloc failed
+			ret.error = 10;
+			return ret;
+		}
+
+
+		ret.params[0] = malloc((sizeof(char) * strlen(line)) + 1);
+		if (!ret.params[0])
+		{
+			// malloc failed
+			free(ret.params);
+			ret.error = 10;
+			return ret;
+		}
+		strcpy(ret.params[0], line);
+		ret.numParams = 1;
+		
+		return ret;
+	}
+	
+	case INST_TYPE_STRING:
+	{
+		if (line[0] == '\"' || line[strlen(line) - 1] == '\"')
+		{
+			/* Error: invalid data string */
+			ret.error = 5;
+			return ret;
+		}
+		// copy string from pos 1 to strlen-2
+		// remove "
+		line++;
+		line[strlen(line) - 1] = '\0';
+
+		ret.params = (char**)malloc(sizeof(char*) * 1);
+		if (!ret.params)
+		{
+			// malloc failed
+			ret.error = 10;
+			return ret;
+		}
+
+		
+		ret.params[0] = malloc((sizeof(char) * strlen(line))+ 1);
+		if (!ret.params[0])
+		{
+			// malloc failed
+			free(ret.params);
+			ret.error = 10;
+			return ret;
+		}
+		strcpy(ret.params[0], line);
+		ret.numParams = 1;
+
+		return ret;
+	}
+
+	case INST_TYPE_INVALID:
+	{
+		ret.error = 3;
+		return ret;
+	}
+	}
+
+
+
+
 }
 
 Operation parseOperation(char* line)
@@ -75,6 +251,7 @@ Operation parseOperation(char* line)
 	
 	
 	opcodeStr = strtok(line, " ");
+	// TODO: what if opcodeStr is NULL??
 	opcodeStr = removeLeadingSpaces(opcodeStr);
 	removeTrailingSpaces(opcodeStr);
 

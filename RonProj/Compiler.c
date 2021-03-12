@@ -24,17 +24,20 @@ int compileFile(char* inputFilePath)
 	}	
 
 	/* Work on parsing */
-	/* */
+	/* First pass */
 	int DC = DC_START_POS, IC = IC_START_POS;
 
 	char line[MAX_LINE_LENGTH];
 	while (!readNextLine(line, MAX_LINE_LENGTH))
 	{
 		LineTypeEnum lineType = detectLineType(line);
+		Instruction instruction;
+
 		switch (lineType)
 		{
 		case INVALID_LINE:
 		{
+
 			break;
 
 		}
@@ -42,7 +45,6 @@ int compileFile(char* inputFilePath)
 		case COMMENT_LINE:
 		{
 			continue;
-
 		}
 		case INSTRUCTION_LINE:
 		{

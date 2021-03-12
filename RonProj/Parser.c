@@ -38,15 +38,18 @@ LineTypeEnum detectLineType(char* line)
 }
 
 
-Instruction parseIntruction(char* line)
+Instruction* parseIntruction(char* line)
 {
-	Instruction ret;
-	ret.error = 0;
-	ret.label[0] = '\0'; // empty label
+	Instruction* ret = (Instruction*)malloc(sizeof(Instruction));
+	if (!ret)
+		return NULL;
+
+	ret->error = 0;
+	ret->label[0] = '\0'; // empty label
 	
-	ret.type = INST_TYPE_INVALID;
-	ret.params = NULL;
-	ret.numParams = 0;
+	ret->type = INST_TYPE_INVALID;
+	ret->params = NULL;
+	ret->numParams = 0;
 
 	char* label = NULL;
 
@@ -59,10 +62,10 @@ Instruction parseIntruction(char* line)
 		if (!isValidSymbolName(label))
 		{
 			/* Error: invalid label */
-			ret.error = 2;
+			ret->error = 2;
 			return ret;
 		}
-		strcpy(ret.label, label);
+		strcpy(ret->label, label);
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 
@@ -75,12 +78,12 @@ Instruction parseIntruction(char* line)
 	char *instructionTypeStr = strtok(line, " ");
 	instructionTypeStr = removeLeadingSpaces(instructionTypeStr);
 	removeTrailingSpaces(instructionTypeStr);
-	ret.type = InstructionTypeStringToEnum(instructionTypeStr);
+	ret->type = InstructionTypeStringToEnum(instructionTypeStr);
 	
 	line = strtok(NULL, "");
 	line = removeLeadingSpaces(line);
 	removeTrailingSpaces(line);
-	switch (ret.type)
+	switch (ret->type)
 	{
 	case INST_TYPE_DATA:
 	{
@@ -88,17 +91,17 @@ Instruction parseIntruction(char* line)
 		{
 			// comma at start or end. error
 		}
-		ret.numParams = countOccurrencesInString(',', line) + 1;
-		ret.params = (char**)malloc(sizeof(char*) * ret.numParams);
-		if (!ret.params)
+		ret->numParams = countOccurrencesInString(',', line) + 1;
+		ret->params = (char**)malloc(sizeof(char*) * ret->numParams);
+		if (!ret->params)
 		{
-			ret.error = 10;
+			ret->error = 10;
 			return ret;
 		}
 
 		int i;
 		char* param = strtok(line, ",");
-		for (i = 0; i < ret.numParams; i++)
+		for (i = 0; i < ret->numParams; i++)
 		{
 			param = removeLeadingSpaces(param);
 			removeTrailingSpaces(param);
@@ -107,26 +110,26 @@ Instruction parseIntruction(char* line)
 				// not a number. deallocate.
 				int j;
 				for (j = 0; j < i; j++)
-					free(ret.params[j]);
-				free(ret.params);
+					free(ret->params[j]);
+				free(ret->params);
 
-				ret.error = 6;
+				ret->error = 6;
 				return ret;
 			}
 
-			ret.params[i] = (char*)malloc(strlen(param) + 1);
-			if (!ret.params[i])
+			ret->params[i] = (char*)malloc(strlen(param) + 1);
+			if (!ret->params[i])
 			{
 				//malloc failed. deallocate.
 				int j;
 				for (j = 0; j < i; j++)
-					free(ret.params[j]);
-				free(ret.params);
+					free(ret->params[j]);
+				free(ret->params);
 
-				ret.error = 10;
+				ret->error = 10;
 				return ret;
 			}
-			strcpy(ret.params[i], param);
+			strcpy(ret->params[i], param);
 
 			param = strtok(NULL, ",");
 		}
@@ -139,30 +142,30 @@ Instruction parseIntruction(char* line)
 		if (!isValidSymbolName(line))
 		{
 			/* Error: invalid data label */
-			ret.error = 5;
+			ret->error = 5;
 			return ret;
 		}
 		
 		// copy label
-		ret.params = (char**)malloc(sizeof(char*) * 1);
-		if (!ret.params)
+		ret->params = (char**)malloc(sizeof(char*) * 1);
+		if (!ret->params)
 		{
 			// malloc failed
-			ret.error = 10;
+			ret->error = 10;
 			return ret;
 		}
 
 
-		ret.params[0] = malloc((sizeof(char) * strlen(line)) + 1);
-		if (!ret.params[0])
+		ret->params[0] = malloc((sizeof(char) * strlen(line)) + 1);
+		if (!ret->params[0])
 		{
 			// malloc failed
-			free(ret.params);
-			ret.error = 10;
+			free(ret->params);
+			ret->error = 10;
 			return ret;
 		}
-		strcpy(ret.params[0], line);
-		ret.numParams = 1;
+		strcpy(ret->params[0], line);
+		ret->numParams = 1;
 		
 		return ret;
 	}
@@ -172,7 +175,7 @@ Instruction parseIntruction(char* line)
 		if (line[0] != '\"' || line[strlen(line) - 1] != '\"')
 		{
 			/* Error: invalid data string */
-			ret.error = 5;
+			ret->error = 5;
 			return ret;
 		}
 		// copy string from pos 1 to strlen-2
@@ -180,32 +183,32 @@ Instruction parseIntruction(char* line)
 		line++;
 		line[strlen(line) - 1] = '\0';
 
-		ret.params = (char**)malloc(sizeof(char*) * 1);
-		if (!ret.params)
+		ret->params = (char**)malloc(sizeof(char*) * 1);
+		if (!ret->params)
 		{
 			// malloc failed
-			ret.error = 10;
+			ret->error = 10;
 			return ret;
 		}
 
 		
-		ret.params[0] = malloc((sizeof(char) * strlen(line))+ 1);
-		if (!ret.params[0])
+		ret->params[0] = malloc((sizeof(char) * strlen(line))+ 1);
+		if (!ret->params[0])
 		{
 			// malloc failed
-			free(ret.params);
-			ret.error = 10;
+			free(ret->params);
+			ret->error = 10;
 			return ret;
 		}
-		strcpy(ret.params[0], line);
-		ret.numParams = 1;
+		strcpy(ret->params[0], line);
+		ret->numParams = 1;
 
 		return ret;
 	}
 
 	case INST_TYPE_INVALID:
 	{
-		ret.error = 3;
+		ret->error = 3;
 		return ret;
 	}
 	}
@@ -215,13 +218,16 @@ Instruction parseIntruction(char* line)
 
 }
 
-Operation parseOperation(char* line)
+Operation* parseOperation(char* line)
 {
-	Operation ret;
-	ret.error = 0;
-	ret.label[0] = '\0'; // empty label
-	ret.sourceType = NONE;
-	ret.targetType = NONE;
+	Operation* ret = (Operation*)malloc(sizeof(Operation));
+	if (!ret)
+		return NULL;
+
+	ret->error = 0;
+	ret->label[0] = '\0'; // empty label
+	ret->sourceType = NONE;
+	ret->targetType = NONE;
 
 	char *label = NULL,
 		 *opcodeStr = NULL,
@@ -238,10 +244,10 @@ Operation parseOperation(char* line)
 		if (!isValidSymbolName(label))
 		{
 			/* Error: invalid label */
-			ret.error = 2;
+			ret->error = 2;
 			return ret;
 		}
-		strcpy(ret.label, label);
+		strcpy(ret->label, label);
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 
@@ -256,11 +262,11 @@ Operation parseOperation(char* line)
 	removeTrailingSpaces(opcodeStr);
 
 	line = strtok(NULL, "");
-	ret.opcode = operatorStringToEnum(opcodeStr);
-	if (ret.opcode == OPERATOR_INVALID)
+	ret->opcode = operatorStringToEnum(opcodeStr);
+	if (ret->opcode == OPERATOR_INVALID)
 	{
 		/* Error: invalid operand */
-		ret.error = 3;
+		ret->error = 3;
 		return ret;
 	}
 
@@ -300,20 +306,20 @@ Operation parseOperation(char* line)
 	
 	if (operand1 && operand2)
 	{
-		ret.targetType = detectOperandType(operand2);
-		stripOperandData(ret.target, operand2, ret.targetType);
-		ret.sourceType = detectOperandType(operand1);
-		stripOperandData(ret.source, operand1, ret.sourceType);
+		ret->targetType = detectOperandType(operand2);
+		stripOperandData(ret->target, operand2, ret->targetType);
+		ret->sourceType = detectOperandType(operand1);
+		stripOperandData(ret->source, operand1, ret->sourceType);
 	}
 	else if (operand1)
 	{
-		ret.targetType = detectOperandType(operand1);
-		stripOperandData(ret.target, operand1, ret.targetType);
+		ret->targetType = detectOperandType(operand1);
+		stripOperandData(ret->target, operand1, ret->targetType);
 	}
 
-	if (ret.sourceType == INVALID_ADDR_METHOD || ret.targetType == INVALID_ADDR_METHOD)
+	if (ret->sourceType == INVALID_ADDR_METHOD || ret->targetType == INVALID_ADDR_METHOD)
 	{
-		ret.error = 1;
+		ret->error = 1;
 	}
 
 
@@ -321,3 +327,23 @@ Operation parseOperation(char* line)
 
 }
 
+
+
+void freeInstruction(Instruction* instruction)
+{
+	if (!instruction)
+		return;
+
+	int i;
+	for (i = 0; i < instruction->numParams; i++)
+	{
+		free(instruction->params[i]);
+	}
+	free(instruction->params);
+	free(instruction);
+}
+
+void freeOperation(Operation* operation)
+{
+	free(operation);
+}

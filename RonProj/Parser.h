@@ -28,14 +28,19 @@ typedef struct
 	int error;
 	char label[MAX_SYMBOL_LEN];
 	InstructionTypeEnum type;
-	
+
 	char** params;
 	int numParams;
 } Instruction;
+
+void freeInstruction(Instruction* instruction);
+void freeOperation(Operation* operation);
+
+
 LineTypeEnum detectLineType(char* line);
 
-Instruction parseIntruction(char* line);
-Operation parseOperation(char* line);
+Instruction* parseIntruction(char* line);
+Operation *parseOperation(char* line);
 
 AddrMethodEnum detectOperandType(char* str);
 #endif

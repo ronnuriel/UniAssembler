@@ -5,7 +5,8 @@
 #include "Parser.h"
 
 #define MAX_LINE_LENGTH 82 /* include \n and \0 */
-
+#define DC_START_POS 0
+#define IC_START_POS 100
 int compileFile(char* inputFilePath)
 {
 	char* asFilePath = NULL,
@@ -23,6 +24,9 @@ int compileFile(char* inputFilePath)
 	}	
 
 	/* Work on parsing */
+	/* */
+	int DC = DC_START_POS, IC = IC_START_POS;
+
 	char line[MAX_LINE_LENGTH];
 	while (!readNextLine(line, MAX_LINE_LENGTH))
 	{

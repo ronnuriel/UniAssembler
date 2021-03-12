@@ -45,6 +45,7 @@ Instruction* parseIntruction(char* line)
 		return NULL;
 
 	ret->error = 0;
+	ret->labelFlag = 0;
 	ret->label[0] = '\0'; // empty label
 	
 	ret->type = INST_TYPE_INVALID;
@@ -66,6 +67,7 @@ Instruction* parseIntruction(char* line)
 			return ret;
 		}
 		strcpy(ret->label, label);
+		ret->labelFlag = 1;
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 
@@ -226,6 +228,7 @@ Operation* parseOperation(char* line)
 
 	ret->error = 0;
 	ret->label[0] = '\0'; // empty label
+	ret->labelFlag = 0;
 	ret->sourceType = NONE;
 	ret->targetType = NONE;
 
@@ -248,6 +251,7 @@ Operation* parseOperation(char* line)
 			return ret;
 		}
 		strcpy(ret->label, label);
+		ret->labelFlag = 1;
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 

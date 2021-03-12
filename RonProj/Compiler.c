@@ -3,10 +3,13 @@
 #include "Compiler.h"
 #include "File.h"
 #include "Parser.h"
+#include "SymbolList.h"
+#include "CodeList.h"
 
 #define MAX_LINE_LENGTH 82 /* include \n and \0 */
 #define DC_START_POS 0
 #define IC_START_POS 100
+
 int compileFile(char* inputFilePath)
 {
 	char* asFilePath = NULL,
@@ -25,13 +28,22 @@ int compileFile(char* inputFilePath)
 
 	/* Work on parsing */
 	/* First pass */
+
 	int DC = DC_START_POS, IC = IC_START_POS;
+	CodeList* dataList = initCodeList();
+	if (!dataList)
+	{
+		return -1;
+	}
+	SymbolList* symbolList = initSymbolList();
+
 
 	char line[MAX_LINE_LENGTH];
 	while (!readNextLine(line, MAX_LINE_LENGTH))
 	{
 		LineTypeEnum lineType = detectLineType(line);
 		Instruction instruction;
+		
 
 		switch (lineType)
 		{
@@ -48,13 +60,16 @@ int compileFile(char* inputFilePath)
 		}
 		case INSTRUCTION_LINE:
 		{
-			parseIntruction(line);
+			
 			//TODO: instruction
 			break;
 		}
 		case OPERATION_LINE:
 		{
-			parseOperation(line);
+			Operation* operation = parseOperation(line);
+			if (operation->label[0] != '\0')
+				
+
 			//int isSourceAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 			//int isDestAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 			break;
@@ -68,4 +83,46 @@ int compileFile(char* inputFilePath)
 	free(extFilePath);
 	free(entFilePath);
 
+}
+int compileInstruction(char *line, int* DC, int* IC, SymbolList* symbolList)
+{
+	
+
+	Instruction* instruction = parseIntruction(line);
+
+
+	switch (instruction->type)
+	{
+	
+	case INST_TYPE_ENTRY:
+	{
+		return 1;
+	}
+	case INST_TYPE_EXTERN:
+	{
+		if (getSymbolRowByName(symbolList, instruction->params[0]))
+		{
+			// label already defined!. error
+			return 0;
+		}
+
+		addSymbolToList(symbolList, instruction->params[0], 0, EXTERNAL);
+		return 1;
+	}
+	case INST_TYPE_STRING:
+	case INST_TYPE_DATA:
+	{
+		if (instruction->labelFlag == 1)
+		{
+			// string instruction with label. 
+			if (getSymbolRowByName(symbolList, instruction->params[0]))
+			{
+				// label already defined!. error
+				return 0;
+			}
+			addSymbolToList(symbolList, instruction->label, *DC, CODE);
+		}
+		// hande data and increment DC
+	}
+	}
 }

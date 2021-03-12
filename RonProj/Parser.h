@@ -15,6 +15,7 @@ typedef enum
 typedef struct
 {
 	int error;
+	int labelFlag;
 	char label[MAX_SYMBOL_LEN];
 	OperatorsEnum opcode;
 	AddrMethodEnum sourceType;
@@ -26,6 +27,7 @@ typedef struct
 typedef struct
 {
 	int error;
+	int labelFlag;
 	char label[MAX_SYMBOL_LEN];
 	InstructionTypeEnum type;
 

@@ -26,7 +26,7 @@ int isValidNumericSign(char ch)
 	return(ch == '+' || ch == '-');
 }
 
-int isVaildNum(char* str)
+int isValidNum(char* str)
 {
 	if (!str || strlen(str) == 0) 
 		return 0;

@@ -6,8 +6,6 @@
 int main(int argc, char** argv)
 {
 
-	//stripOperandData
-	char c[] = "LABEL: .data 1,+2,-3";
-	Instruction o = parseIntruction(c);
+	printf("%d", generateBinaryWord(ADD, REGISTER_DIRECT, DIRECT));
 	
 }

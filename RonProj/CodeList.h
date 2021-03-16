@@ -10,12 +10,17 @@ typedef struct {
 
 typedef struct {
 	List* list;
+	int currAddr;
 } CodeList;
 
 CodeListRow* createCodeListRow(int address, unsigned int word, char ARE);
 void freeCodeListRow(CodeListRow* row);
-CodeList* initCodeList();
-void addCodeToList(CodeList* clist, int address, unsigned int word, char ARE);
+CodeList* initCodeList(int startAddr);
+
+int getCodeListCurrentAddr(CodeList* clist);
+void addCodeToList(CodeList* clist, unsigned int word, char ARE);
 void freeCodeList(CodeList* clist);
 
+void addStringToCodeList(CodeList* clist, char* str);
+void addDataToCodeList(CodeList* clist, char** params, int numParams);
 #endif

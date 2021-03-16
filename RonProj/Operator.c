@@ -1,5 +1,8 @@
 #include  <stdlib.h>
 #include "Operator.h"
+#include "Symbol.h"
+#include "HelperFunc.h"
+
 #include <string.h>
 #pragma warning(disable: 4996)
 static char operatorsNames[][NUM_OF_OPERATORS] = {
@@ -67,6 +70,22 @@ int getOperatorFunct(OperatorsEnum op)
 	return getOperatorDataByEnum(op)->funct;
 }
 
+int getAddrMethodBin(AddrMethodEnum method)
+{
+	switch (method)
+	{
+	case NONE:
+	case IMMEDIATE:
+		return 0;
+	case DIRECT:
+		return 1;
+	case RELATIVE:
+		return 2;
+	case REGISTER_DIRECT:
+		return 3;
+	}
+}
+
 char* getOperatorName(OperatorsEnum op)
 {
 	return getOperatorDataByEnum(op)->name;
@@ -95,7 +114,7 @@ AddrMethodEnum detectOperandType(char* str)
 
 	if (str[0] == '#')
 	{
-		if (isVaildNum(str + 1))
+		if (isValidNum(str + 1))
 			return IMMEDIATE;
 		else
 			return INVALID_ADDR_METHOD;
@@ -129,4 +148,14 @@ void stripOperandData(char* dest, char* source, AddrMethodEnum addrMethod)
 		strcpy(dest, source+1);
 		return;
 	}
+}
+
+int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target)
+{
+	int opcodeBin = getOperatorOpcode(op) << 8;
+	int functBin = getOperatorFunct(op) << 4;
+	int sourceBin = getAddrMethodBin(source) << 2;
+	int targetBin = getAddrMethodBin(target);
+
+	return opcodeBin | functBin | sourceBin | targetBin;
 }

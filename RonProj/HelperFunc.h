@@ -8,7 +8,8 @@ int isNumeric(char ch);
 int isAlphaNumeric(char ch);
 int isWhiteSpace(char ch);
 int isValidNumericSign(char ch);
-int isVaildNum(char* str);
+
+int isValidNum(char* str);
 
 
 

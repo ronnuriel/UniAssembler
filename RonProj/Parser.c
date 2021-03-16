@@ -107,7 +107,7 @@ Instruction* parseIntruction(char* line)
 		{
 			param = removeLeadingSpaces(param);
 			removeTrailingSpaces(param);
-			if (!isVaildNum(param))
+			if (!isValidNum(param))
 			{
 				// not a number. deallocate.
 				int j;

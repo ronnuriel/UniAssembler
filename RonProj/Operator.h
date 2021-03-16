@@ -54,6 +54,7 @@ extern OperatorData operators[];
 
 int getOperatorOpcode(OperatorsEnum op);
 int getOperatorFunct(OperatorsEnum op);
+int getAddrMethodBin(AddrMethodEnum method);
 char* getOperatorName(OperatorsEnum op);
 int isSourceAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 int isDestAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
@@ -62,4 +63,5 @@ OperatorData* getOperatorDataByEnum(OperatorsEnum op);
 
 AddrMethodEnum detectOperandType(char* str);
 void stripOperandData(char* dest, char* source, AddrMethodEnum);
+int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target);
 #endif

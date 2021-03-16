@@ -12,30 +12,39 @@
 
 int compileFile(char* inputFilePath)
 {
+
 	char* asFilePath = NULL,
 		* obFilePath = NULL,
 		* extFilePath = NULL,
 		* entFilePath = NULL;
 
+	CodeList* dataList = initCodeList(DC_START_POS);
+	CodeList* operationList = initCodeList(IC_START_POS);//ron
+	if (!dataList || !operationList) // ron
+	{
+		freeCodeList(dataList);
+		freeCodeList(operationList);
+		return -1;
+	}
+
 	if (!createFileNames(inputFilePath, &asFilePath, &obFilePath, &entFilePath, &extFilePath))
 	{
+		freeCodeList(dataList);
+		freeCodeList(operationList);
 		return -1;
 	}
 	if(!openInputFile(asFilePath))
 	{
+		freeCodeList(dataList);
+		freeCodeList(operationList);
 		return -1;
 	}	
 
 	/* Work on parsing */
 	/* First pass */
 
-	int DC = DC_START_POS, IC = IC_START_POS;
-	CodeList* dataList = initCodeList();
-	CodeList* codeList = initCodeList();//ron
-	if (!dataList || !codeList) // ron
-	{
-		return -1;
-	}
+	
+
 	SymbolList* symbolList = initSymbolList();
 
 
@@ -61,7 +70,7 @@ int compileFile(char* inputFilePath)
 		}
 		case INSTRUCTION_LINE:
 		{
-			
+			compileInstruction(line, symbolList, dataList);
 			//TODO: instruction
 			break;
 		}
@@ -73,6 +82,8 @@ int compileFile(char* inputFilePath)
 
 			//int isSourceAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
 			//int isDestAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
+			
+			//compileOperation(line, symbolList, )
 			break;
 		}
 		}
@@ -85,7 +96,7 @@ int compileFile(char* inputFilePath)
 	free(entFilePath);
 
 }
-int compileInstruction(char *line, int* DC, int* IC, SymbolList* symbolList)
+int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 {
 	
 
@@ -104,11 +115,13 @@ int compileInstruction(char *line, int* DC, int* IC, SymbolList* symbolList)
 		if (getSymbolRowByName(symbolList, instruction->params[0]))
 		{
 			// label already defined!. error
+			freeInstruction(instruction);
 			return 0;
 		}
 
 		addSymbolToList(symbolList, instruction->params[0], 0, EXTERNAL);
-		return 1;
+		
+		break;
 	}
 	case INST_TYPE_STRING:
 	case INST_TYPE_DATA:
@@ -119,11 +132,45 @@ int compileInstruction(char *line, int* DC, int* IC, SymbolList* symbolList)
 			if (getSymbolRowByName(symbolList, instruction->params[0]))
 			{
 				// label already defined!. error
+				freeInstruction(instruction);
 				return 0;
 			}
-			addSymbolToList(symbolList, instruction->label, *DC, CODE);//11??IC
+			addSymbolToList(symbolList, instruction->label, getCodeListCurrentAddr(dataList), DATA);//11??IC
 		}
+
 		// hande data and increment DC
+		if (instruction->type == INST_TYPE_STRING)
+		{
+			addStringToCodeList(dataList, instruction->params[0]);
+		}
+		else
+		{
+			addDataToCodeList(dataList, instruction->params, instruction->numParams);
+		}
+		
+		break;
 	}
 	}
+	freeInstruction(instruction);
+	return 1;
+}
+
+int compileOperation(char* line, SymbolList* symbolList, CodeList* operationList)
+{
+
+	Operation* operation = parseOperation(line);
+	if (operation->labelFlag == 1)
+	{
+		// operation with label. 
+		if (getSymbolRowByName(symbolList, operation->label))
+		{
+			// label already defined!. error
+			return 0;
+		}
+		addSymbolToList(symbolList, operation->label, getCodeListCurrentAddr(operationList), CODE); // line 11
+	}
+
+
+	freeOperation(operation);
+	return 1;
 }

@@ -31,7 +31,8 @@ int compileFile(char* inputFilePath)
 
 	int DC = DC_START_POS, IC = IC_START_POS;
 	CodeList* dataList = initCodeList();
-	if (!dataList)
+	CodeList* codeList = initCodeList();//ron
+	if (!dataList || !codeList) // ron
 	{
 		return -1;
 	}
@@ -120,7 +121,7 @@ int compileInstruction(char *line, int* DC, int* IC, SymbolList* symbolList)
 				// label already defined!. error
 				return 0;
 			}
-			addSymbolToList(symbolList, instruction->label, *DC, CODE);
+			addSymbolToList(symbolList, instruction->label, *DC, CODE);//11??IC
 		}
 		// hande data and increment DC
 	}

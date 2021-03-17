@@ -39,6 +39,7 @@ void addSymbolToList(SymbolList* slist, char* name, int value, unsigned char att
 void freeSymbolList(SymbolList* slist);
 SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name);
 
+void printSymbolAttributes(unsigned char attributes);
 void printSymbolListRow(SymbolListRow* row);
 void printSymbolList(SymbolList* slist);
 #endif

@@ -84,8 +84,8 @@ void addDataToCodeList(CodeList* clist, char** params, int numParams)
 void addOperationToCodeList(CodeList* clist, Operation* op)
 {
 	addCodeToList(clist, generateBinaryWord(op->opcode, op->sourceType, op->targetType), 'A');
-	//addMethodAddrToCodeList(clist, op->sourceType, op->source);
-	//addMethodAddrToCodeList(clist, op->targetType, op->target);
+	addOperandToCodeList(clist, op->sourceType, op->source);
+	addOperandToCodeList(clist, op->targetType, op->target);
 }
 
 void addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value)
@@ -100,9 +100,8 @@ void addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value)
 	case IMMEDIATE:
 	case RELATIVE:
 	{
-		break;
-		
 		addCodeToList(clist, (unsigned int)valueNum, 'A');
+		break;
 	}
 	case DIRECT:
 	{

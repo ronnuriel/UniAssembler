@@ -6,6 +6,9 @@
 #include "SymbolList.h"
 #include "CodeList.h"
 
+
+#include "stdio.h"
+
 #define MAX_LINE_LENGTH 82 /* include \n and \0 */
 #define DC_START_POS 0
 #define IC_START_POS 100
@@ -20,10 +23,14 @@ int compileFile(char* inputFilePath)
 
 	CodeList* dataList = initCodeList(DC_START_POS);
 	CodeList* operationList = initCodeList(IC_START_POS);//ron
-	if (!dataList || !operationList) // ron
+	SymbolList* symbolList = initSymbolList();
+
+
+	if (!dataList || !operationList || !symbolList) // ron
 	{
 		freeCodeList(dataList);
 		freeCodeList(operationList);
+		freeSymbolList(symbolList);
 		return -1;
 	}
 
@@ -31,12 +38,14 @@ int compileFile(char* inputFilePath)
 	{
 		freeCodeList(dataList);
 		freeCodeList(operationList);
+		freeSymbolList(symbolList);
 		return -1;
 	}
 	if(!openInputFile(asFilePath))
 	{
 		freeCodeList(dataList);
 		freeCodeList(operationList);
+		freeSymbolList(symbolList);
 		return -1;
 	}	
 
@@ -45,21 +54,21 @@ int compileFile(char* inputFilePath)
 
 	
 
-	SymbolList* symbolList = initSymbolList();
+	
 
 
 	char line[MAX_LINE_LENGTH];
-	while (!readNextLine(line, MAX_LINE_LENGTH))
+	while (readNextLine(line, MAX_LINE_LENGTH))
 	{
 		LineTypeEnum lineType = detectLineType(line);
-		Instruction instruction;
+		
 		
 
 		switch (lineType)
 		{
 		case INVALID_LINE:
 		{
-
+			printf("INVALID LINE!!!!!!\n\n");
 			break;
 
 		}
@@ -76,8 +85,8 @@ int compileFile(char* inputFilePath)
 		}
 		case OPERATION_LINE:
 		{
-			Operation* operation = parseOperation(line);
-			if (operation->label[0] != '\0')
+			compileOperation(line, symbolList, operationList);
+			
 				
 
 			//int isSourceAddrMethodLegitByOperator(OperatorsEnum op, AddrMethodEnum method);
@@ -88,6 +97,13 @@ int compileFile(char* inputFilePath)
 		}
 		}
 	}
+
+
+	printSymbolList(symbolList);
+	printf("data list:\n");
+	printCodeList(dataList);
+	printf("operation list:\n");
+	printCodeList(operationList);
 
 	closeInputFile();
 	free(asFilePath);
@@ -170,7 +186,8 @@ int compileOperation(char* line, SymbolList* symbolList, CodeList* operationList
 		addSymbolToList(symbolList, operation->label, getCodeListCurrentAddr(operationList), CODE); // line 11
 	}
 
-	//addOperationToCodeList(operationList,)
+	addOperationToCodeList(operationList, operation);
+
 	freeOperation(operation);
 	return 1;
 }

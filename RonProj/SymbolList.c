@@ -99,7 +99,9 @@ void freeSymbolList(SymbolList* slist)
 
 void printSymbolListRow(SymbolListRow* row)
 {
-	printf("label: %s  value: %d, attributes: %d\n", row->name, row->value, row->attributes);
+	printf("label: %s  value: %d, attributes:", row->name, row->value);
+	printSymbolAttributes(row->attributes);
+	printf("\n");
 }
 void printSymbolList(SymbolList* slist)
 {
@@ -121,5 +123,20 @@ void printSymbolList(SymbolList* slist)
 	}
 
 	printf("\n=== End of symbol list ====\n\n");
+
+}
+
+
+
+void printSymbolAttributes(unsigned char attributes)
+{
+	if (attributes & CODE)
+		printf(" CODE, ");
+	if (attributes & DATA)
+		printf(" DATA, ");
+	if (attributes & EXTERNAL)
+		printf(" EXTERNAL, ");
+	if (attributes & ENTRY)
+		printf(" ENTRY, ");
 
 }

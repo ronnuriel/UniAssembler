@@ -34,7 +34,8 @@ int readNextLine(char* str, int maxLength)
 
 	if (fgets(str, maxLength, inputFile))
 	{
-		str[strlen(str)- 1] = '\0'; /* remove \n in end of line */
+		if (str[strlen(str) - 1] == '\n')
+			str[strlen(str)- 1] = '\0'; /* remove \n in end of line */
 		return 1;
 	}
 		

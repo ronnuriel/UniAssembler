@@ -25,11 +25,11 @@ static char operatorsNames[][NUM_OF_OPERATORS] = {
 };
 
 static OperatorData operators[NUM_OF_OPERATORS] = {
-	{0, -1, operatorsNames[MOV], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
-	{1, -1, operatorsNames[CMP], IMMEDIATE | DIRECT | REGISTER_DIRECT, IMMEDIATE | DIRECT | REGISTER_DIRECT},
+	{0, 0, operatorsNames[MOV], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
+	{1, 0, operatorsNames[CMP], IMMEDIATE | DIRECT | REGISTER_DIRECT, IMMEDIATE | DIRECT | REGISTER_DIRECT},
 	{2, 10, operatorsNames[ADD], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
 	{2, 11, operatorsNames[SUB], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
-	{4, -1, operatorsNames[LEA], DIRECT,                               DIRECT | REGISTER_DIRECT},
+	{4, 0, operatorsNames[LEA], DIRECT,                               DIRECT | REGISTER_DIRECT},
 	{5, 10, operatorsNames[CLR], 0,                                    DIRECT | REGISTER_DIRECT},
 	{5, 11, operatorsNames[NOT], 0,                                    DIRECT | REGISTER_DIRECT},
 	{5, 12, operatorsNames[INC], 0,                                    DIRECT | REGISTER_DIRECT},
@@ -37,10 +37,10 @@ static OperatorData operators[NUM_OF_OPERATORS] = {
 	{9, 10, operatorsNames[JMP], 0,                                    DIRECT | RELATIVE},
 	{9, 11, operatorsNames[BNE], 0,                                    DIRECT | RELATIVE},
 	{9, 12, operatorsNames[JSR], 0,                                    DIRECT | RELATIVE},
-	{12, -1, operatorsNames[RED],0,                                    DIRECT | REGISTER_DIRECT},
-	{13, -1, operatorsNames[PRN], 0,                                   IMMEDIATE | DIRECT | REGISTER_DIRECT},
-	{14, -1, operatorsNames[RTS], 0,                                   0},
-	{15, -1,operatorsNames[STOP], 0,                                   0}
+	{12, 0, operatorsNames[RED],0,                                    DIRECT | REGISTER_DIRECT},
+	{13, 0, operatorsNames[PRN], 0,                                   IMMEDIATE | DIRECT | REGISTER_DIRECT},
+	{14, 0, operatorsNames[RTS], 0,                                   0},
+	{15, 0,operatorsNames[STOP], 0,                                   0}
 };
 
 
@@ -152,10 +152,10 @@ void stripOperandData(char* dest, char* source, AddrMethodEnum addrMethod)
 
 unsigned int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target)
 {
-	int opcodeBin = getOperatorOpcode(op) << 8;
-	int functBin = getOperatorFunct(op) << 4;
-	int sourceBin = getAddrMethodBin(source) << 2;
-	int targetBin = getAddrMethodBin(target);
+	unsigned int opcodeBin = getOperatorOpcode(op) << 8;
+	unsigned int functBin = getOperatorFunct(op) << 4;
+	unsigned int sourceBin = getAddrMethodBin(source) << 2;
+	unsigned int targetBin = getAddrMethodBin(target);
 
 	return opcodeBin | functBin | sourceBin | targetBin;
 }

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-CodeListRow* createCodeListRow(int address, unsigned int word, char ARE)
+CodeListRow* createCodeListRow(int address, unsigned int word, char ARE)/*creat row*/
 {
 
 	CodeListRow* ret = (CodeListRow*)malloc(sizeof(CodeListRow));
@@ -15,11 +15,11 @@ CodeListRow* createCodeListRow(int address, unsigned int word, char ARE)
 	return ret;
 
 }
-void freeCodeListRow(CodeListRow* row)
+void freeCodeListRow(CodeListRow* row) /*free row from list*/
 {
 	free(row);
 }
-CodeList* initCodeList(int startAddr) 
+CodeList* initCodeList(int startAddr) /* initialize*/
 {
 
 	CodeList* ret = (CodeList*)malloc(sizeof(CodeList));
@@ -36,7 +36,7 @@ CodeList* initCodeList(int startAddr)
 	ret->currAddr = startAddr;
 }
 
-void addCodeToList(CodeList* clist, unsigned int word, char ARE)
+void addCodeToList(CodeList* clist, unsigned int word, char ARE)/*add code */
 {
 	if (!clist)
 	{
@@ -46,7 +46,7 @@ void addCodeToList(CodeList* clist, unsigned int word, char ARE)
 	(clist->currAddr)++;
 }
 
-void freeCodeList(CodeList* clist)
+void freeCodeList(CodeList* clist) /*free the list using the func freeCodeListRow */
 {
 	if (!clist)
 		return;
@@ -54,12 +54,12 @@ void freeCodeList(CodeList* clist)
 	freeList(clist->list, freeCodeListRow);
 	free(clist);
 }
-int getCodeListCurrentAddr(CodeList* clist)
+int getCodeListCurrentAddr(CodeList* clist)/*get func */
 {
 	return clist->currAddr;
 }
 
-void addStringToCodeList(CodeList* clist, char* str)
+void addStringToCodeList(CodeList* clist, char* str)/*adds the string into */
 {
 	for (int i = 0; i < strlen(str)+1; i++) // +1 to include \0
 	{

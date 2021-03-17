@@ -1,6 +1,11 @@
 #include "CodeList.h"
 #include <stdlib.h>
 
+#include "Operator.h"
+#include "Register.h"
+
+
+#include "stdio.h"
 
 CodeListRow* createCodeListRow(int address, unsigned int word, char ARE)/*creat row*/
 {
@@ -63,7 +68,7 @@ void addStringToCodeList(CodeList* clist, char* str)/*adds the string into */
 {
 	for (int i = 0; i < strlen(str)+1; i++) // +1 to include \0
 	{
-		addCodeToList(clist, str[i], "A");
+		addCodeToList(clist, str[i], 'A');
 	}
 }
 void addDataToCodeList(CodeList* clist, char** params, int numParams)
@@ -72,6 +77,73 @@ void addDataToCodeList(CodeList* clist, char** params, int numParams)
 	{
 		char* paramStr = params[i];
 
-		addCodeToList(clist, atoi(paramStr), "A");
+		addCodeToList(clist, atoi(paramStr), 'A');
 	}
+}
+
+void addOperationToCodeList(CodeList* clist, Operation* op)
+{
+	addCodeToList(clist, generateBinaryWord(op->opcode, op->sourceType, op->targetType), 'A');
+	//addMethodAddrToCodeList(clist, op->sourceType, op->source);
+	//addMethodAddrToCodeList(clist, op->targetType, op->target);
+}
+
+void addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value)
+{
+	int valueNum = atoi(value);
+	switch (type)
+	{
+	case NONE:
+	{
+		break;
+	}
+	case IMMEDIATE:
+	case RELATIVE:
+	{
+		break;
+		
+		addCodeToList(clist, (unsigned int)valueNum, 'A');
+	}
+	case DIRECT:
+	{
+		addCodeToList(clist, 0, '?'); 
+		break;
+	}
+
+	case REGISTER_DIRECT:
+	{
+		addCodeToList(clist, RegisterNameToBinary(value), 'A');
+		break;
+	}
+
+	}
+}
+
+void printCodeListRow(CodeListRow* row)
+{
+	unsigned int twelveBits = row->word & 0xFFF;
+	printf("Address: %d  word: %x ARE: %c\n", row->address, twelveBits, row->ARE);
+}
+
+void printCodeList(CodeList* clist)
+{
+	if (!clist)
+	{
+		printf("No code list\n");
+		return;
+	}
+	
+	int len = clist->list->length;
+	printf("Code List: length %d. next available address: %d\n", len, clist->currAddr);
+	printf("================================\n");
+	Node* t = clist->list->head;
+
+	while (t)
+	{
+		CodeListRow* row = t->data;
+		printCodeListRow(row);
+		t = getNodeNext(t);
+	}
+
+	printf("\n=== End of code list ====\n\n");
 }

@@ -2,6 +2,9 @@
 #include "SymbolList.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "stdio.h"
+
 SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attributes)
 {
 	if (!name)
@@ -92,4 +95,31 @@ void freeSymbolList(SymbolList* slist)
 
 	freeList(slist->list, freeSymbolListRow);
 	free(slist);
+}
+
+void printSymbolListRow(SymbolListRow* row)
+{
+	printf("label: %s  value: %d, attributes: %d\n", row->name, row->value, row->attributes);
+}
+void printSymbolList(SymbolList* slist)
+{
+	if (!slist)
+	{
+		printf("No symbol list\n");
+		return;
+	}
+	int len = slist->list->length;
+	printf("symbol list: length %d.\n", len);
+	printf("================================\n");
+	Node* t = slist->list->head;
+
+	while (t)
+	{
+		SymbolListRow* row = t->data;
+		printSymbolListRow(row);
+		t = getNodeNext(t);
+	}
+
+	printf("\n=== End of symbol list ====\n\n");
+
 }

@@ -13,5 +13,10 @@ int isValidRegisterName(char* str)
 		    isNumeric(str[1]) && 
 		    charDigitToInt(str[1]) <= MAX_REGISTER_NUM);
 }
-	
+
+unsigned int RegisterNameToBinary(char* str)
+{
+	int registerNum = charDigitToInt(str[1]);
+	return (unsigned int)(1) << registerNum;
+}
 

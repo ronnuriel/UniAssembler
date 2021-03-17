@@ -170,7 +170,7 @@ int compileOperation(char* line, SymbolList* symbolList, CodeList* operationList
 		addSymbolToList(symbolList, operation->label, getCodeListCurrentAddr(operationList), CODE); // line 11
 	}
 
-
+	//addOperationToCodeList(operationList,)
 	freeOperation(operation);
 	return 1;
 }

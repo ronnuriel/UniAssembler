@@ -63,5 +63,5 @@ OperatorData* getOperatorDataByEnum(OperatorsEnum op);
 
 AddrMethodEnum detectOperandType(char* str);
 void stripOperandData(char* dest, char* source, AddrMethodEnum);
-int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target);
+unsigned int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target);
 #endif

@@ -3,5 +3,5 @@
 
 /* checked */
 int isValidRegisterName(char* str);
-
+unsigned int RegisterNameToBinary(char* str);
 #endif

@@ -150,7 +150,7 @@ void stripOperandData(char* dest, char* source, AddrMethodEnum addrMethod)
 	}
 }
 
-int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target)
+unsigned int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target)
 {
 	int opcodeBin = getOperatorOpcode(op) << 8;
 	int functBin = getOperatorFunct(op) << 4;

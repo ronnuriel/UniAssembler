@@ -20,5 +20,12 @@ int main(int argc, char** argv)
 	//addSymbolToList(l, "abc", 123, 'a');
 	//printSymbolList(l);
 	//printf("%d", generateBinaryWord(ADD, REGISTER_DIRECT, DIRECT));
-	compileFile("1");
+	int i;
+	/*for (i = 1; i < argc; i++)
+	{
+		printf("working on %s\n", argv[i]);
+		compileFile(argv[i]);
+	}*/
+	compileFile("test");
+	printf("\ndone.\n");
 }

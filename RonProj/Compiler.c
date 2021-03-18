@@ -6,7 +6,6 @@
 #include "SymbolList.h"
 #include "CodeList.h"
 
-
 #include "stdio.h"
 
 
@@ -28,7 +27,7 @@ int compileFile(char* inputFilePath)
 	CodeList* dataList = initCodeList(DC_START_POS);
 	CodeList* operationList = initCodeList(IC_START_POS);//ron
 	SymbolList* symbolList = initSymbolList();
-
+	printf("1\n");
 
 	if (!dataList || !operationList || !symbolList) // ron
 	{
@@ -54,13 +53,13 @@ int compileFile(char* inputFilePath)
 	}	
 
 	/* First pass */
-
+	printf("1\n");
 	char line[MAX_LINE_LENGTH];
 	while (readNextLine(line, MAX_LINE_LENGTH))
 	{
 		LineTypeEnum lineType = detectLineType(line);
-		
-		
+		printf("line: %s\n", line);
+		printf("linetype: %d\n" ,lineType);
 
 		switch (lineType)
 		{
@@ -77,6 +76,7 @@ int compileFile(char* inputFilePath)
 		}
 		case INSTRUCTION_LINE:
 		{
+			printf("Instruction\n");
 			compileInstruction(line, symbolList, dataList);
 			//TODO: instruction
 			break;
@@ -107,9 +107,6 @@ int compileFile(char* inputFilePath)
 	/* update addresses of DATA labels in symbol list*/
 	updateSymbolListValuesOfData(symbolList, operationList->currAddr);
 	
-	
-
-
 	/* second pass */
 	rewindInputFile();
 
@@ -147,7 +144,9 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 
 	Instruction* instruction = parseIntruction(line);
 
-
+	printf("0instructin11: %d", instruction->type);
+	printf("0instructin: %p", instruction);
+	printf("0params: %p", instruction->params);
 	switch (instruction->type)
 	{
 	
@@ -157,15 +156,20 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 	}
 	case INST_TYPE_EXTERN:
 	{
+		printf("Extern11\n");
+		printf("instructin11: %d", instruction->type);
+		printf("instructin: %p", instruction);
+		printf("params: %p", instruction->params);
 		if (getSymbolRowByName(symbolList, instruction->params[0]))
 		{
+			printf("error\n");
 			// label already defined!. error
 			freeInstruction(instruction);
 			return 0;
 		}
-
+		printf("000\n");
 		addSymbolToList(symbolList, instruction->params[0], 0, EXTERNAL);
-		
+		printf("after\n");
 		break;
 	}
 	case INST_TYPE_STRING:
@@ -180,9 +184,10 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 				freeInstruction(instruction);
 				return 0;
 			}
+
 			addSymbolToList(symbolList, instruction->label, getCodeListCurrentAddr(dataList), DATA);//11??IC
 		}
-
+		
 		// hande data and increment DC
 		if (instruction->type == INST_TYPE_STRING)
 		{
@@ -196,6 +201,7 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 		break;
 	}
 	}
+	printf("before free\n");
 	freeInstruction(instruction);
 	return 1;
 }

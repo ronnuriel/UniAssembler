@@ -1,11 +1,13 @@
 #include "CodeList.h"
 #include <stdlib.h>
+#include <string.h>
 
 #include "Operator.h"
 #include "Register.h"
 
 #include "File.h"
 #include "stdio.h"
+
 #pragma warning(disable: 4996)
 CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data)/*creat row*/
 {

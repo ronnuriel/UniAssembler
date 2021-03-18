@@ -62,6 +62,7 @@ SymbolList* initSymbolList()
 }
 SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name)
 {
+	printf("in getSymbolRowByName");
 	if (!slist)
 		return NULL;
 

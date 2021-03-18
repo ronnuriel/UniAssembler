@@ -83,7 +83,11 @@ int getAddrMethodBin(AddrMethodEnum method)
 		return 2;
 	case REGISTER_DIRECT:
 		return 3;
+	default:
+		return -1;
 	}
+
+	return -1;
 }
 
 char* getOperatorName(OperatorsEnum op)
@@ -147,7 +151,10 @@ void stripOperandData(char* dest, char* source, AddrMethodEnum addrMethod)
 	case RELATIVE:
 		strcpy(dest, source+1);
 		return;
+	default:
+		return;
 	}
+		
 }
 
 unsigned int generateBinaryWord(OperatorsEnum op, AddrMethodEnum source, AddrMethodEnum target)

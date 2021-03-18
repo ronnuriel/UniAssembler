@@ -97,6 +97,7 @@ Instruction* parseIntruction(char* line)
 		ret->params = (char**)malloc(sizeof(char*) * ret->numParams);
 		if (!ret->params)
 		{
+			printf("malloc failed - params\n");
 			ret->error = 10;
 			return ret;
 		}
@@ -110,6 +111,7 @@ Instruction* parseIntruction(char* line)
 			if (!isValidNum(param))
 			{
 				// not a number. deallocate.
+				printf("not a valid num\n");
 				int j;
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
@@ -122,6 +124,7 @@ Instruction* parseIntruction(char* line)
 			ret->params[i] = (char*)malloc(strlen(param) + 1);
 			if (!ret->params[i])
 			{
+				printf("malloc failed - params[%d]\n", i);
 				//malloc failed. deallocate.
 				int j;
 				for (j = 0; j < i; j++)
@@ -141,6 +144,7 @@ Instruction* parseIntruction(char* line)
 	case INST_TYPE_ENTRY:
 	case INST_TYPE_EXTERN:
 	{
+		printf("malloc extern\n");
 		if (!isValidSymbolName(line))
 		{
 			/* Error: invalid data label */
@@ -152,6 +156,7 @@ Instruction* parseIntruction(char* line)
 		ret->params = (char**)malloc(sizeof(char*) * 1);
 		if (!ret->params)
 		{
+			printf("malloc failed - params\n");
 			// malloc failed
 			ret->error = 10;
 			return ret;
@@ -161,6 +166,7 @@ Instruction* parseIntruction(char* line)
 		ret->params[0] = malloc((sizeof(char) * strlen(line)) + 1);
 		if (!ret->params[0])
 		{
+			printf("malloc failed - params[0]\n");
 			// malloc failed
 			free(ret->params);
 			ret->error = 10;

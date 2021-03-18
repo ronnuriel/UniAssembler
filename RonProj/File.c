@@ -9,7 +9,9 @@
 #define ENT_STR ".ent"
 #define EXT_STR ".ext"
 #pragma warning(disable: 4996)
+
 static FILE* inputFile = NULL;
+static FILE* outputFile = NULL;
 
 int openInputFile(char* path)
 {
@@ -100,4 +102,26 @@ int createFileNames(char* filename, char** as, char** ob, char** ent, char** ext
 	free(ext);
 
 	return 0;
+}
+
+int openOutputFile(char* path)
+{
+	outputFile = fopen(path, "w");
+	if (!outputFile)
+		return 0;
+	return 1;
+}
+
+void closeOutputFile()
+{
+	if (outputFile)
+		fclose(outputFile);
+
+	outputFile = NULL;
+}
+
+int writeOutput(char* str)
+{
+	return fputs(str, outputFile);
+
 }

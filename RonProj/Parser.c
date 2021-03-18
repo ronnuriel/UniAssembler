@@ -71,7 +71,7 @@ Instruction* parseIntruction(char* line)
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 
-		printf("label: %s.\n", label);
+		
 
 	}
 
@@ -255,7 +255,7 @@ Operation* parseOperation(char* line)
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 
-		printf("label: %s.\n", label);
+		
 
 	}
 	
@@ -292,7 +292,7 @@ Operation* parseOperation(char* line)
 		{
 			operand2 = removeLeadingSpaces(operand2);
 			removeTrailingSpaces(operand2);
-			printf("2:%s.\n", operand2);
+			
 
 		
 		}

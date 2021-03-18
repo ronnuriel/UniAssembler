@@ -2,7 +2,8 @@
 #include "SymbolList.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include "Symbol.h"
+#include "File.h"
 #include "stdio.h"
 
 SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attributes)
@@ -79,7 +80,15 @@ SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name)
 
 	return NULL;
 }
-
+int getSymbolValueByName(SymbolList* slist, char* name, int* returnValue)
+{
+	SymbolListRow* row = getSymbolRowByName(slist, name);
+	if (!row)
+		return 0;
+	
+	*returnValue = row->value;
+	return 1;
+}
 void addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes)
 {
 	if (!slist || !name)
@@ -96,6 +105,38 @@ void freeSymbolList(SymbolList* slist)
 	freeList(slist->list, freeSymbolListRow);
 	free(slist);
 }
+int isRowOfType(SymbolListRow* row, SymbolAttributesEnum attribute)
+{
+	return row->attributes & attribute;
+}
+void updateSymbolListValuesOfData(SymbolList* slist, int incVal)
+{
+	if (!slist)
+		return;
+
+	Node* t = slist->list->head;
+
+	while (t)
+	{
+		SymbolListRow* row = t->data;
+		if (isRowOfType(row, DATA))
+		{
+			row->value += incVal;
+		}
+		t = getNodeNext(t);
+	}
+}
+
+int addAttributeToSymbolInSymbolList(SymbolList* slist, char* symbol, SymbolAttributesEnum attribute)
+{
+	SymbolListRow* row = getSymbolRowByName(slist, symbol);
+	if (!row)
+		return 0;
+
+	row->attributes |= attribute;
+	return 1;
+}
+
 
 void printSymbolListRow(SymbolListRow* row)
 {
@@ -138,5 +179,46 @@ void printSymbolAttributes(unsigned char attributes)
 		printf(" EXTERNAL, ");
 	if (attributes & ENTRY)
 		printf(" ENTRY, ");
+
+}
+int doesSymbolListIncludeAttribute(SymbolList* slist, SymbolAttributesEnum attribute)
+{
+	if (!slist)
+	{
+		return 0;
+	}
+	Node* t = slist->list->head;
+	while (t)
+	{
+		SymbolListRow* row = t->data;
+		if (row->attributes & attribute)
+		{
+			/* attribute present */
+			return 1;
+		}
+		t = getNodeNext(t);
+	}
+	return 0;
+}
+void printSymbolListToFuncByAttribute(SymbolList* slist, SymbolAttributesEnum attribute, int func(char* str))
+{
+	if (!slist)
+	{
+		return;
+	}
+
+	Node* t = slist->list->head;
+	while (t)
+	{
+		SymbolListRow* row = t->data;
+		if (row->attributes & attribute)
+		{
+			/* attribute present */
+			char str[MAX_SYMBOL_LEN + 1 + FILE_ADDR_LEN + 1 + 1];
+			sprintf(str, "%s %.4d\n", row->name, row->value);
+			func(str);
+		}
+		t = getNodeNext(t);
+	}
 
 }

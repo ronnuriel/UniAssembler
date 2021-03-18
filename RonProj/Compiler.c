@@ -9,10 +9,14 @@
 
 #include "stdio.h"
 
+
+#pragma warning(disable: 4996)
+
+
 #define MAX_LINE_LENGTH 82 /* include \n and \0 */
 #define DC_START_POS 0
 #define IC_START_POS 100
-
+#define MAX_OBJECT_FILE_CAPTION_LEN 50
 int compileFile(char* inputFilePath)
 {
 
@@ -49,13 +53,7 @@ int compileFile(char* inputFilePath)
 		return -1;
 	}	
 
-	/* Work on parsing */
 	/* First pass */
-
-	
-
-	
-
 
 	char line[MAX_LINE_LENGTH];
 	while (readNextLine(line, MAX_LINE_LENGTH))
@@ -98,6 +96,7 @@ int compileFile(char* inputFilePath)
 		}
 	}
 
+	
 
 	printSymbolList(symbolList);
 	printf("data list:\n");
@@ -105,7 +104,37 @@ int compileFile(char* inputFilePath)
 	printf("operation list:\n");
 	printCodeList(operationList);
 
+	/* update addresses of DATA labels in symbol list*/
+	updateSymbolListValuesOfData(symbolList, operationList->currAddr);
+	
+	
+
+
+	/* second pass */
+	rewindInputFile();
+
+	/* find all entries*/
+	updateEntries(symbolList);
+
+	printf("symbol list after update:\n");
+	printSymbolList(symbolList);
+
+
 	closeInputFile();
+
+	updateRelativeAndDirectLabelsInCodeList(operationList, symbolList);
+
+	printf("operation list after update:\n");
+	printCodeList(operationList);
+
+	/* generate object file */
+	generateObjectFile(operationList, dataList, obFilePath);
+	
+	/* generate entry file */
+	generateAttributeFile(symbolList, entFilePath, ENTRY);
+
+	/* generate external file*/
+	generateExternalFile(operationList, extFilePath);
 	free(asFilePath);
 	free(obFilePath);
 	free(extFilePath);
@@ -189,5 +218,75 @@ int compileOperation(char* line, SymbolList* symbolList, CodeList* operationList
 	addOperationToCodeList(operationList, operation);
 
 	freeOperation(operation);
+	return 1;
+}
+
+void updateEntries(SymbolList* symbolList)
+{
+	char line[MAX_LINE_LENGTH];
+	while (readNextLine(line, MAX_LINE_LENGTH))
+	{
+		LineTypeEnum lineType = detectLineType(line);
+
+		if (lineType != INSTRUCTION_LINE)
+			continue;
+
+		/* line is instruction*/
+		Instruction* instruction = parseIntruction(line);
+		if (instruction->type == INST_TYPE_ENTRY)
+		{
+			/* found entry! */
+			if (!addAttributeToSymbolInSymbolList(symbolList, instruction->params[0], ENTRY))
+			{
+				printf("Error symbol not found!");
+			}
+
+		}
+
+		freeInstruction(instruction);
+	}
+}
+
+int generateObjectFile(CodeList* operationList, CodeList* dataList, char *path)
+{
+	if (!openOutputFile(path))
+		return 0;
+
+	/* write caption - length of operation list and data list*/
+	char caption[MAX_OBJECT_FILE_CAPTION_LEN];
+	sprintf(caption, "%d %d\n", getCodeListLength(operationList), getCodeListLength(dataList));
+	writeOutput(caption);
+
+	/* write operation list*/
+	printCodeListToFunc(operationList, 0, writeOutput);
+	
+	/* write data list*/
+	printCodeListToFunc(dataList, operationList->currAddr, writeOutput);
+	closeOutputFile();
+}
+
+int generateAttributeFile(SymbolList* symbolList, char* path, SymbolAttributesEnum attribute)
+{
+
+	if (doesSymbolListIncludeAttribute(symbolList, attribute))
+	{
+		if (!openOutputFile(path))
+			return 0;
+		printSymbolListToFuncByAttribute(symbolList, attribute, writeOutput);
+		closeOutputFile();
+	}
+	return 1;
+}
+
+int generateExternalFile(CodeList* operationList, char* path)
+{
+	if (doesCodeListIncludeExternals(operationList))
+	{
+		if (!openOutputFile(path))
+			return 0;
+		printCodeListExternalsToFunc(operationList, writeOutput);
+		closeOutputFile();
+	}
+
 	return 1;
 }

@@ -156,7 +156,7 @@ Instruction* parseIntruction(char* line)
 		}
 		
 		/* copy label*/
-		ret->params = (char**)malloc(sizeof(char*) + 1);
+		ret->params = (char**)malloc(sizeof(char*) * 1);
 		if (!ret->params)
 		{
 			printf("malloc failed - params\n");
@@ -167,7 +167,7 @@ Instruction* parseIntruction(char* line)
 
 		printf("line 4 before malloc: %s\n", line);
 		printf("line 4 before len: %d\n", strlen(line));
-		ret->params[0] = malloc((sizeof(char*) * strlen(line)) + 1);/*ron added* */
+		ret->params[0] = malloc((sizeof(char) * strlen(line)) + 1);
 		if (!ret->params[0])
 		{
 			printf("malloc failed - params[0]\n");

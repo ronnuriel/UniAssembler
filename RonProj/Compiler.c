@@ -162,7 +162,7 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 		printf("26Extern11\n");
 		printf("26Extern11\n");
 		/*printf("26instructin11: %d", instruction->type);*/
-		printf("26 params: %p ",( instruction->params)[0]);
+		printf("26 params: %s ",(instruction->params)[0]);
 		if (getSymbolRowByName(symbolList, instruction->params[0]))
 		{
 			printf("error\n");

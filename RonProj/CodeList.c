@@ -29,9 +29,9 @@ CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* d
 
 	return ret;
 }
-void freeCodeListRow(CodeListRow* row) /*free row from list*/
+void freeCodeListRow(void* row) /*free row from list*/
 {
-	free(row->data);
+	free(((CodeListRow *)row)->data);
 	free(row);
 }
 CodeList* initCodeList(int startAddr) /* initialize*/
@@ -49,6 +49,7 @@ CodeList* initCodeList(int startAddr) /* initialize*/
 	}
 
 	ret->currAddr = startAddr;
+	return ret;
 }
 int getCodeListLength(CodeList* clist)
 {
@@ -79,7 +80,7 @@ int getCodeListCurrentAddr(CodeList* clist)/*get func */
 
 void addStringToCodeList(CodeList* clist, char* str)/*adds the string into */
 {
-	int i;
+	unsigned int i;
 	for (i = 0; i < strlen(str)+1; i++) /* +1 to include \0*/
 	{
 		addCodeToList(clist, str[i], ARE_A, NULL);
@@ -177,7 +178,7 @@ int updateRelativeAndDirectLabelsInCodeList(CodeList* clist, SymbolList* symbolL
 	while (t)
 	{
 		CodeListRow* row = t->data;
-		int value;
+		
 		if (row->ARE == ARE_DIRECT || row->ARE == ARE_RELATIVE)
 		{
 			SymbolListRow* symbolRow = getSymbolRowByName(symbolList, row->data);

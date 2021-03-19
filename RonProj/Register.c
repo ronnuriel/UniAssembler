@@ -1,5 +1,7 @@
 #include "Register.h"
 #include "HelperFunc.h"
+#include <string.h>
+
 #define REGISTER_LEN 2
 #define MAX_REGISTER_NUM 7
 

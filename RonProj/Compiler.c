@@ -1,11 +1,8 @@
-
-
 #include "Compiler.h"
 #include "File.h"
 #include "Parser.h"
 #include "SymbolList.h"
 #include "CodeList.h"
-
 #include "stdio.h"
 
 

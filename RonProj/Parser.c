@@ -6,7 +6,7 @@
 #include "Operator.h"
 #include "Instruction.h"
 #include <stdio.h>
-
+#include <malloc.h>
 #pragma warning(disable: 4996)
 
 
@@ -231,7 +231,7 @@ Instruction* parseIntruction(char* line)
 
 
 
-
+	return ret;
 }
 
 Operation* parseOperation(char* line)

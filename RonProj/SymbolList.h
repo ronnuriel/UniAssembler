@@ -25,7 +25,7 @@ typedef struct {
 
 /* Symbol List Row*/
 SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attributes);
-void freeSymbolListRow(SymbolListRow* row);
+void freeSymbolListRow(void* row);
 int isRowOfType(SymbolListRow* row, SymbolAttributesEnum attribute);
 
 /* returns 1 if match */

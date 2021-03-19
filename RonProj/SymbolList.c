@@ -29,12 +29,12 @@ SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attribut
 	return ret;
 }
 
-void freeSymbolListRow(SymbolListRow* row)
+void freeSymbolListRow(void* row)
 {
 	if (!row)
 		return;
 
-	free(row->name);
+	free(((SymbolListRow*)row)->name);
 	free(row);
 }
 

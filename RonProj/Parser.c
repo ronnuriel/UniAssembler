@@ -90,6 +90,7 @@ Instruction* parseIntruction(char* line)
 	case INST_TYPE_DATA:
 	{
 		int i;
+		char* param = NULL
 		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
 			/* comma at start or end. error*/
@@ -104,7 +105,7 @@ Instruction* parseIntruction(char* line)
 		}
 
 		
-		char* param = strtok(line, ",");
+		param = strtok(line, ",");
 		for (i = 0; i < ret->numParams; i++)
 		{
 			param = removeLeadingSpaces(param);

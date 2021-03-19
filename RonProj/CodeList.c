@@ -247,24 +247,27 @@ int printCodeListExternalsToFunc(CodeList* clist, int func(char* str))
 	{
 		return 1;
 	}
-	Node* t = clist->list->head;
-
-	while (t)
+	else
 	{
-		CodeListRow* row = t->data;
-		if (row->ARE == ARE_E)
+		Node* t = clist->list->head;
+
+		while (t)
 		{
-			char value[FILE_ADDR_LEN + 1 + 1];
-			sprintf(value, "%.4d\n", row->address);
+			CodeListRow* row = t->data;
+			if (row->ARE == ARE_E)
+			{
+				char value[FILE_ADDR_LEN + 1 + 1];
+				sprintf(value, "%.4d\n", row->address);
 
-			writeOutput(row->data);
-			writeOutput(" ");
-			writeOutput(value);
+				writeOutput(row->data);
+				writeOutput(" ");
+				writeOutput(value);
+			}
+			t = getNodeNext(t);
 		}
-		t = getNodeNext(t);
-	}
 
-	return 1;
+		return 1;
+	}
 }
 
 int doesCodeListIncludeExternals(CodeList* clist)

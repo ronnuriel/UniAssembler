@@ -1,4 +1,6 @@
 #include "Instruction.h"
+#include <string.h>
+
 InstructionTypeEnum InstructionTypeStringToEnum(char* str)
 {
 	if (strcmp(str, INSTRUCTION_TYPE_DATA_STR) ==0)

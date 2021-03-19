@@ -28,23 +28,30 @@ int isValidNumericSign(char ch)
 
 int isValidNum(char* str)
 {
-	if (!str || strlen(str) == 0) 
-		return 0;
-	if (isValidNumericSign(str[0]) && strlen(str) == 1)
-		return 0;
-
-	if (!isValidNumericSign(str[0]) && !isNumeric(str[0])) /* first char not +,-, or digit*/
-		return 0;
-
-	int i;
-	for (i = 1; i < strlen(str); ++i)
+	if (!str || strlen(str) == 0)
 	{
-		if (!isNumeric(str[i])) {
-			return 0;
-		}
+		return 0;
 	}
+	else if (isValidNumericSign(str[0]) && strlen(str) == 1)
+	{
+		return 0;
+	}
+	else if (!isValidNumericSign(str[0]) && !isNumeric(str[0])) /* first char not +,-, or digit*/
+	{
+		return 0;
+	}
+	else
+	{
+		unsigned int i;
+		for (i = 1; i < strlen(str); ++i)
+		{
+			if (!isNumeric(str[i])) {
+				return 0;
+			}
+		}
 
-	return 1; 
+		return 1;
+	}
 }
 
 int charDigitToInt(char digit)

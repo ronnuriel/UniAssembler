@@ -36,20 +36,21 @@ void addToList(void* data, List* list) {
 
 void freeList(List* list, void deleter(void *)) {
 
-	if (!list) 
-		return;
-
-	Node* t = list->head;
-
-	while (t)
+	if (list)
 	{
-		deleter(t->data);
-		Node* del = t;
-		t = getNodeNext(t);
-		freeNode(del);
-	}
+		Node* t = list->head;
 
-	free(list);
+		while (t)
+		{
+			Node* del = t;
+			deleter(t->data);
+			
+			t = getNodeNext(t);
+			freeNode(del);
+		}
+
+		free(list);
+	}
 }
 
 

@@ -133,7 +133,8 @@ void addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value)
 		addCodeToList(clist, RegisterNameToBinary(value), ARE_A, NULL);
 		break;
 	}
-
+	default:
+		break;
 	}
 }
 
@@ -150,25 +151,31 @@ void printCodeListRow(CodeListRow* row)
 
 void printCodeList(CodeList* clist)
 {
+	
+
 	if (!clist)
 	{
 		printf("No code list\n");
 		return;
 	}
-	
-	int len = clist->list->length;
-	printf("Code List: length %d. next available address: %d\n", len, clist->currAddr);
-	printf("================================\n");
-	Node* t = clist->list->head;
-
-	while (t)
+	else
 	{
-		CodeListRow* row = t->data;
-		printCodeListRow(row);
-		t = getNodeNext(t);
-	}
+		int len = clist->list->length;
+		Node* t = clist->list->head;
 
-	printf("\n=== End of code list ====\n\n");
+		printf("Code List: length %d. next available address: %d\n", len, clist->currAddr);
+		printf("================================\n");
+		
+
+		while (t)
+		{
+			CodeListRow* row = t->data;
+			printCodeListRow(row);
+			t = getNodeNext(t);
+		}
+
+		printf("\n=== End of code list ====\n\n");
+	}
 }
 
 int updateRelativeAndDirectLabelsInCodeList(CodeList* clist, SymbolList* symbolList)
@@ -218,18 +225,21 @@ int printCodeListToFunc(CodeList* clist, int offset, int func(char* str))
 	{
 		return 1;
 	}
-	Node* t = clist->list->head;
-
-	while (t)
+	else
 	{
-		CodeListRow* row = t->data;
-		char str[FILE_ADDR_LEN + 1 +FILE_VALUE_LEN + 1 + 1 + 1 + 1]; /* 0000 000 A\n\0*/
-		sprintf(str, "%.4d %.3X %c\n", row->address + offset, row->word & 0xFFF, row->ARE);
-		writeOutput(str);
-		t = getNodeNext(t);
-	}
+		Node* t = clist->list->head;
 
-	return 1;
+		while (t)
+		{
+			CodeListRow* row = t->data;
+			char str[FILE_ADDR_LEN + 1 + FILE_VALUE_LEN + 1 + 1 + 1 + 1]; /* 0000 000 A\n\0*/
+			sprintf(str, "%.4d %.3X %c\n", row->address + offset, row->word & 0xFFF, row->ARE);
+			writeOutput(str);
+			t = getNodeNext(t);
+		}
+
+		return 1;
+	}
 }
 int printCodeListExternalsToFunc(CodeList* clist, int func(char* str))
 {
@@ -263,17 +273,20 @@ int doesCodeListIncludeExternals(CodeList* clist)
 	{
 		return 0;
 	}
-	Node* t = clist->list->head;
-
-	while (t)
+	else
 	{
-		CodeListRow* row = t->data;
-		if (row->ARE == ARE_E)
-		{
-			return 1;
-		}
-		t = getNodeNext(t);
-	}
+		Node* t = clist->list->head;
 
-	return 0;
+		while (t)
+		{
+			CodeListRow* row = t->data;
+			if (row->ARE == ARE_E)
+			{
+				return 1;
+			}
+			t = getNodeNext(t);
+		}
+
+		return 0;
+	}
 }

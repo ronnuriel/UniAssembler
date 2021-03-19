@@ -42,9 +42,11 @@ Instruction* parseIntruction(char* line)
 {
 
 	Instruction* ret = (Instruction*)malloc(sizeof(Instruction));
+	char* label = NULL;
+	char* instructionTypeStr = NULL;
 	if (!ret)
 		return NULL;
-	printf("line 1: %s\n", line);
+	
 	ret->error = 0;
 	ret->labelFlag = 0;
 	ret->label[0] = '\0'; /* empty label*/
@@ -53,8 +55,7 @@ Instruction* parseIntruction(char* line)
 	ret->params = NULL;
 	ret->numParams = 0;
 
-	char* label = NULL;
-
+	
 	line = removeLeadingSpaces(line);
 
 	/* search for LABEL*/
@@ -71,14 +72,11 @@ Instruction* parseIntruction(char* line)
 		ret->labelFlag = 1;
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
-
-		printf("line 2: %s\n", line);
-
 	}
 
 
 
-	char *instructionTypeStr = strtok(line, " ");
+	instructionTypeStr = strtok(line, " ");
 	instructionTypeStr = removeLeadingSpaces(instructionTypeStr);
 	removeTrailingSpaces(instructionTypeStr);
 	ret->type = InstructionTypeStringToEnum(instructionTypeStr);
@@ -86,11 +84,12 @@ Instruction* parseIntruction(char* line)
 	line = strtok(NULL, "");
 	line = removeLeadingSpaces(line);
 	removeTrailingSpaces(line);
-	printf("line 3: %s\n", line);
+	
 	switch (ret->type)
 	{
 	case INST_TYPE_DATA:
 	{
+		int i;
 		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
 			/* comma at start or end. error*/
@@ -104,7 +103,7 @@ Instruction* parseIntruction(char* line)
 			return ret;
 		}
 
-		int i;
+		
 		char* param = strtok(line, ",");
 		for (i = 0; i < ret->numParams; i++)
 		{
@@ -112,9 +111,10 @@ Instruction* parseIntruction(char* line)
 			removeTrailingSpaces(param);
 			if (!isValidNum(param))
 			{
+				int j;
 				/* not a number. deallocate.*/
 				printf("not a valid num\n");
-				int j;
+				
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
 				free(ret->params);
@@ -126,9 +126,10 @@ Instruction* parseIntruction(char* line)
 			ret->params[i] = (char*)malloc(strlen(param) + 1);
 			if (!ret->params[i])
 			{
+				int j;
 				printf("malloc failed - params[%d]\n", i);
 				/*malloc failed. deallocate.*/
-				int j;
+				
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
 				free(ret->params);
@@ -146,7 +147,7 @@ Instruction* parseIntruction(char* line)
 	case INST_TYPE_ENTRY:
 	case INST_TYPE_EXTERN:
 	{
-		printf("malloc extern\n");
+
 		if (!isValidSymbolName(line))
 		{
 			printf("malloc failed - not valid symbol name\n");
@@ -165,8 +166,7 @@ Instruction* parseIntruction(char* line)
 			return ret;
 		}
 
-		printf("line 4 before malloc: %s\n", line);
-		printf("line 4 before len: %d\n", strlen(line));
+
 		ret->params[0] = malloc((sizeof(char) * strlen(line)) + 1);
 		if (!ret->params[0])
 		{
@@ -178,11 +178,7 @@ Instruction* parseIntruction(char* line)
 		}
 		strcpy(ret->params[0], line);
 		ret->numParams = 1;
-		printf("ret prints %s \n", ret->params[0]);
-		printf("ret prints %d\n", ret->error);
-		
-		
-		printf("malloc succsess\n");
+
 		return ret;
 	}
 	
@@ -237,6 +233,11 @@ Instruction* parseIntruction(char* line)
 Operation* parseOperation(char* line)
 {
 	Operation* ret = (Operation*)malloc(sizeof(Operation));
+	char* label = NULL,
+		* opcodeStr = NULL,
+		* operand1 = NULL,
+		* operand2 = NULL;
+
 	if (!ret)
 		return NULL;
 
@@ -246,10 +247,7 @@ Operation* parseOperation(char* line)
 	ret->sourceType = NONE;
 	ret->targetType = NONE;
 
-	char *label = NULL,
-		 *opcodeStr = NULL,
-		 *operand1 = NULL,
-		 *operand2 = NULL;
+
 
 
 	line = removeLeadingSpaces(line);
@@ -349,16 +347,16 @@ Operation* parseOperation(char* line)
 
 void freeInstruction(Instruction* instruction)
 {
-	if (!instruction)
-		return;
-
-	int i;
-	for (i = 0; i < instruction->numParams; i++)
+	if (instruction)
 	{
-		free(instruction->params[i]);
+		int i;
+		for (i = 0; i < instruction->numParams; i++)
+		{
+			free(instruction->params[i]);
+		}
+		free(instruction->params);
+		free(instruction);
 	}
-	free(instruction->params);
-	free(instruction);
 }
 
 void freeOperation(Operation* operation)

@@ -1,8 +1,11 @@
+
+
 #include "Compiler.h"
 #include "File.h"
 #include "Parser.h"
 #include "SymbolList.h"
 #include "CodeList.h"
+
 #include "stdio.h"
 
 
@@ -24,8 +27,9 @@ int compileFile(char* inputFilePath)
 	CodeList* dataList = initCodeList(DC_START_POS);
 	CodeList* operationList = initCodeList(IC_START_POS);
 	SymbolList* symbolList = initSymbolList();
-	printf("1\n");
 
+	char line[MAX_LINE_LENGTH];
+	
 	if (!dataList || !operationList || !symbolList) 
 	{
 		freeCodeList(dataList);
@@ -50,13 +54,11 @@ int compileFile(char* inputFilePath)
 	}	
 
 	/* First pass */
-	printf("1\n");
-	char line[MAX_LINE_LENGTH];
+	
+	
 	while (readNextLine(line, MAX_LINE_LENGTH))
 	{
 		LineTypeEnum lineType = detectLineType(line);
-		printf("line: %s\n", line);
-		printf("linetype: %d\n" ,lineType);
 
 		switch (lineType)
 		{
@@ -73,7 +75,7 @@ int compileFile(char* inputFilePath)
 		}
 		case INSTRUCTION_LINE:
 		{
-			printf("Instruction\n");
+			
 			compileInstruction(line, symbolList, dataList);
 			
 			break;
@@ -136,16 +138,13 @@ int compileFile(char* inputFilePath)
 	free(extFilePath);
 	free(entFilePath);
 
+	return 1;
 }
 int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 {
 	
-
 	Instruction* instruction = parseIntruction(line);
 
-	printf("0instructin11: %d", instruction->type);
-	printf("0instructin: %p", instruction);
-	printf("0params: %p", instruction->params);
 	switch (instruction->type)
 	{
 	
@@ -155,11 +154,6 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 	}
 	case INST_TYPE_EXTERN:
 	{
-		printf("26Extern11\n");
-		printf("26Extern11\n");
-		printf("26Extern11\n");
-		/*printf("26instructin11: %d", instruction->type);*/
-		printf("26 params: %s ",(instruction->params)[0]);
 		if (getSymbolRowByName(symbolList, instruction->params[0]))
 		{
 			printf("error\n");
@@ -167,9 +161,9 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 			freeInstruction(instruction);
 			return 0;
 		}
-		printf("000\n");
+		
 		addSymbolToList(symbolList, instruction->params[0], 0, EXTERNAL);
-		printf("after\n");
+		
 		break;
 	}
 	case INST_TYPE_STRING:
@@ -200,8 +194,10 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 		
 		break;
 	}
+	default:
+		break;
 	}
-	printf("before free\n");
+	
 	freeInstruction(instruction);
 	return 1;
 }
@@ -235,40 +231,49 @@ void updateEntries(SymbolList* symbolList)
 		LineTypeEnum lineType = detectLineType(line);
 
 		if (lineType != INSTRUCTION_LINE)
-			continue;
-
-		/* line is instruction*/
-		Instruction* instruction = parseIntruction(line);
-		if (instruction->type == INST_TYPE_ENTRY)
 		{
-			/* found entry! */
-			if (!addAttributeToSymbolInSymbolList(symbolList, instruction->params[0], ENTRY))
+			continue;
+		}
+		else
+		{
+			/* line is instruction*/
+			Instruction* instruction = parseIntruction(line);
+			if (instruction->type == INST_TYPE_ENTRY)
 			{
-				printf("Error symbol not found!");
+				/* found entry! */
+				if (!addAttributeToSymbolInSymbolList(symbolList, instruction->params[0], ENTRY))
+				{
+					printf("Error symbol not found!");
+				}
 			}
 
+			freeInstruction(instruction);
 		}
-
-		freeInstruction(instruction);
 	}
 }
 
 int generateObjectFile(CodeList* operationList, CodeList* dataList, char *path)
 {
 	if (!openOutputFile(path))
+	{
 		return 0;
+	}
+	else
+	{
+		/* write caption - length of operation list and data list*/
+		char caption[MAX_OBJECT_FILE_CAPTION_LEN];
+		sprintf(caption, "%d %d\n", getCodeListLength(operationList), getCodeListLength(dataList));
+		writeOutput(caption);
 
-	/* write caption - length of operation list and data list*/
-	char caption[MAX_OBJECT_FILE_CAPTION_LEN];
-	sprintf(caption, "%d %d\n", getCodeListLength(operationList), getCodeListLength(dataList));
-	writeOutput(caption);
+		/* write operation list*/
+		printCodeListToFunc(operationList, 0, writeOutput);
 
-	/* write operation list*/
-	printCodeListToFunc(operationList, 0, writeOutput);
-	
-	/* write data list*/
-	printCodeListToFunc(dataList, operationList->currAddr, writeOutput);
-	closeOutputFile();
+		/* write data list*/
+		printCodeListToFunc(dataList, operationList->currAddr, writeOutput);
+		closeOutputFile();
+
+		return 1;
+	}
 }
 
 int generateAttributeFile(SymbolList* symbolList, char* path, SymbolAttributesEnum attribute)

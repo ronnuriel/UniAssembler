@@ -7,6 +7,8 @@
 
 
 int isValidSymbolName(char* symbol) {
+	int i;
+
 	if (!symbol) 
 		return 0;
 
@@ -19,7 +21,7 @@ int isValidSymbolName(char* symbol) {
 		return 0;
 
 	/* check rest of letters */
-	int i;
+	
 	for (i = 1; i < strlen(symbol); ++i)
 	{
 		if (!isAlphaNumeric(symbol[i]))

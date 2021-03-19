@@ -59,6 +59,7 @@ SymbolList* initSymbolList()
 		free(ret);
 		return NULL;
 	}
+	return ret;/*ron*/
 }
 SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name)
 {

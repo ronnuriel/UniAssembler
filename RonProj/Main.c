@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	char* test = "e";
+	char* test = "test";
 	printf("working on %s\n", test);
 	if (compileFile(test))
 	{

@@ -28,16 +28,17 @@ int addToList(void* data, List* list) {
 	else
 	{
 		Node* t = list->head;
-		
+		Node* newNode = NULL;
 		while (t->next) {
 			t = getNodeNext(t);
 		}
 
-		Node* newNode = initNode(data, NULL);
+		newNode = initNode(data, NULL);
 		if (!newNode)
 		{
 			return 0;
 		}
+
 		setNodeNext(t, newNode);
 		list->length++;
 		return 1;
@@ -51,7 +52,6 @@ int addToList(void* data, List* list) {
 
 void freeList(List* list, void deleter(void *)) {
 
-	printf("freeList\n");
 	if (list)
 	{
 		Node* t = list->head;
@@ -59,7 +59,6 @@ void freeList(List* list, void deleter(void *)) {
 		while (t)
 		{
 			Node* del = t;
-			printCodeListRow(t->data);
 			deleter(t->data);
 			
 			t = getNodeNext(t);

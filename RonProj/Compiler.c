@@ -63,7 +63,7 @@ int compileFile(char* inputFilePath)
 	while (lineStatus)
 	{
 		lineNum++;
-
+		
 		if (lineStatus == LINE_TOO_LONG)
 		{
 			printf("Error: Line %d too long\n", lineNum);

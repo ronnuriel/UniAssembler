@@ -43,7 +43,9 @@ int readNextLine(char* str, int maxLength)
 
 	if (strlen(str) > maxLength)
 	{
-		while (fgets(str, extraLength, inputFile) && strlen(str) > 80);
+		while (str && strlen(str) > maxLength && strlen(str) < extraLength - 1)
+			fgets(str, extraLength, inputFile);
+
 		return LINE_TOO_LONG;
 	}
 

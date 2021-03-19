@@ -82,10 +82,10 @@ char* removeLeadingSpaces(char* str)
 
 void removeTrailingSpaces(char* str)
 {
+	int i;
+
 	if (!str)
 		return;
-
-	int i;
 
 	for (i = strlen(str) - 1; i >= 0 && isWhiteSpace(str[i]); i--);
 	str[i + 1] = '\0';

@@ -100,13 +100,14 @@ int getSymbolValueByName(SymbolList* slist, char* name, int* returnValue)
 }
 int addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes)
 {
+	SymbolListRow* newRow = NULL;
 	if (!slist || !name)
 	{
 		printf("Error: recieved null pointer\n");
 		return 0;
 	}
 		
-	SymbolListRow* newRow = createSymbolListRow(name, value, attributes);
+	newRow = createSymbolListRow(name, value, attributes);
 	if (!newRow)
 	{
 		printf("Error: Allocation failed while adding label: %s to list\n", name);

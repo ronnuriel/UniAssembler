@@ -31,7 +31,6 @@ CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* d
 }
 void freeCodeListRow(void* row) /*free row from list*/
 {
-	printCodeListRow(row);
 	free(row);
 }
 CodeList* initCodeList(int startAddr) /* initialize*/
@@ -179,7 +178,7 @@ void printCodeListRow(CodeListRow* row)
 	unsigned int twelveBits = row->word & 0xFFF;
 	printf("Address: %d  word: %x ARE: %c line: %d", row->address, twelveBits, row->ARE, row->lineNum);
 	if (row->data[0] != '\0')
-		printf(" data: %s", row->data);
+		printf("data: %s", row->data);
 	
 	printf("\n");
 

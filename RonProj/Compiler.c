@@ -12,7 +12,6 @@
 #pragma warning(disable: 4996)
 
 
-#define MAX_LINE_LENGTH 82 /* include \n and \0 */
 #define DC_START_POS 0
 #define IC_START_POS 100
 #define MAX_OBJECT_FILE_CAPTION_LEN 50
@@ -28,9 +27,10 @@ int compileFile(char* inputFilePath)
 	CodeList* operationList = initCodeList(IC_START_POS);
 	SymbolList* symbolList = initSymbolList();
 
-	char line[MAX_LINE_LENGTH];
+	char line[MAX_LINE_LENGTH + LINE_EXTRA_LENGTH];
 	int retFirstPass = 1, retSecondPass = 1;
-	int lineNum = 1;
+	int lineNum = 0;
+	FILE_STATUS lineStatus;
 	if (!dataList || !operationList || !symbolList)
 	{
 		freeCodeList(dataList);
@@ -58,58 +58,66 @@ int compileFile(char* inputFilePath)
 	}
 
 	/* First pass */
-	lineNum = 1;
-	while (readNextLine(line, MAX_LINE_LENGTH))
+	lineNum = 0;
+	lineStatus = readNextLine(line, MAX_LINE_LENGTH);
+	while (lineStatus)
 	{
-
-		LineTypeEnum lineType = detectLineType(line);
-
-		switch (lineType)
-		{
-		case INVALID_LINE:
-		{
-			printf("Error: Invalid line at line %d: %s\n", lineNum, line);
-			break;
-		}
-		case EMPTY_LINE:
-		case COMMENT_LINE:
-		{
-			continue;
-		}
-		case INSTRUCTION_LINE:
-		{
-
-			if (!compileInstruction(line, symbolList, dataList, lineNum))
-			{
-				retFirstPass = 0;
-			}
-
-			break;
-		}
-		case OPERATION_LINE:
-		{
-			if (!compileOperation(line, symbolList, operationList, lineNum))
-			{
-				retFirstPass = 0;
-			}
-
-
-
-			break;
-		}
-		}
 		lineNum++;
+
+		if (lineStatus == LINE_TOO_LONG)
+		{
+			printf("Error: Line %d too long\n", lineNum);
+		}
+		else
+		{
+			
+			LineTypeEnum lineType = detectLineType(line);
+
+			switch (lineType)
+			{
+			case INVALID_LINE:
+			{
+				printf("Error: Invalid line at line %d: %s\n", lineNum, line);
+				break;
+			}
+			case EMPTY_LINE:
+			case COMMENT_LINE:
+			{
+				break;
+			}
+			case INSTRUCTION_LINE:
+			{
+
+				if (!compileInstruction(line, symbolList, dataList, lineNum))
+				{
+					retFirstPass = 0;
+				}
+
+				break;
+			}
+			case OPERATION_LINE:
+			{
+				if (!compileOperation(line, symbolList, operationList, lineNum))
+				{
+					retFirstPass = 0;
+				}
+
+				break;
+			}
+			}
+		}
+		lineStatus = readNextLine(line, MAX_LINE_LENGTH);
 	}
 
 	/* finished first pass*/
 
-
+	/*
 	printSymbolList(symbolList);
 	printf("data list:\n");
 	printCodeList(dataList);
 	printf("operation list:\n");
 	printCodeList(operationList);
-
+	*/
 
 
 	/* second pass only if no error*/
@@ -124,18 +132,18 @@ int compileFile(char* inputFilePath)
 		if (!updateEntries(symbolList))
 			retSecondPass = 0;
 
-		printf("symbol list after update:\n");
+		/*printf("symbol list after update:\n");
 		printSymbolList(symbolList);
-
+		*/
 
 		
 
 		if (!updateRelativeAndDirectLabelsInCodeList(operationList, symbolList))
 			retSecondPass = 0;
 
-		printf("operation list after update:\n");
+		/*printf("operation list after update:\n");
 		printCodeList(operationList);
-
+		*/
 		if (retSecondPass)
 		{
 			/* generate object file */
@@ -187,6 +195,11 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList, i
 	}
 
 	/* check parsing errors*/
+	if (instruction->error & PE_INVALID_SYM_NAME)
+	{
+		printf("Error: Invalid symbol name in line %d\n", lineNum);
+		retVal = 0;
+	}
 	if (instruction->error & PE_COMMA_AT_START_OR_END)
 	{
 		printf("Error: Extra commas at start or end at line: %d\n", lineNum);
@@ -212,75 +225,81 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList, i
 		printf("Error: Instruction unkown at line: %d\n", lineNum);
 		retVal = 0;
 	}
+	else if (instruction->error & PE_MISSING_PARAMS)
+	{
+		printf("Error: Missing parameters at line: %d\n", lineNum);
+		retVal = 0;
+	}
+	if (retVal != 0)
+	{
+		switch (instruction->type)
+		{
 
-	switch (instruction->type)
-	{
-	
-	case INST_TYPE_ENTRY:
-	{
-		break;
-	}
-	case INST_TYPE_EXTERN:
-	{
-		if (getSymbolRowByName(symbolList, instruction->params[0]))
+		case INST_TYPE_ENTRY:
 		{
-			/* label already defined!. error*/
-			printf("Error at line %d: Label: %s already defined\n", lineNum, instruction->params[0]);
-			freeInstruction(instruction);
-			return 0;
+			break;
 		}
-		
-		if (!addSymbolToList(symbolList, instruction->params[0], 0, EXTERNAL))
+		case INST_TYPE_EXTERN:
 		{
-			freeInstruction(instruction);
-			return 0;
-		}
-		
-		break;
-	}
-	case INST_TYPE_STRING:
-	case INST_TYPE_DATA:
-	{
-		if (instruction->labelFlag == 1)
-		{
-			/* string instruction with label. */
 			if (getSymbolRowByName(symbolList, instruction->params[0]))
 			{
-				/*label already defined!. error*/
+				/* label already defined!. error*/
 				printf("Error at line %d: Label: %s already defined\n", lineNum, instruction->params[0]);
 				freeInstruction(instruction);
 				return 0;
 			}
 
-			if (!addSymbolToList(symbolList, instruction->label, getCodeListCurrentAddr(dataList), DATA))
+			if (!addSymbolToList(symbolList, instruction->params[0], 0, EXTERNAL))
 			{
 				freeInstruction(instruction);
 				return 0;
 			}
+
+			break;
 		}
-		
-		
-		/*hande data and increment DC*/
-		if (!instruction->error && instruction->type == INST_TYPE_STRING)
+		case INST_TYPE_STRING:
+		case INST_TYPE_DATA:
 		{
-			if (!addStringToCodeList(dataList, instruction->params[0], lineNum))
+			if (instruction->labelFlag == 1)
+			{
+				/* string instruction with label. */
+				if (getSymbolRowByName(symbolList, instruction->label))
+				{
+					/*label already defined!. error*/
+					printf("Error at line %d: Label: %s already defined\n", lineNum, instruction->label);
+					freeInstruction(instruction);
+					return 0;
+				}
+
+				if (!addSymbolToList(symbolList, instruction->label, getCodeListCurrentAddr(dataList), DATA))
+				{
+					freeInstruction(instruction);
+					return 0;
+				}
+			}
+
+
+			/*hande data and increment DC*/
+			if (!instruction->error && instruction->type == INST_TYPE_STRING)
+			{
+				if (!addStringToCodeList(dataList, instruction->params[0], lineNum))
+				{
+					freeInstruction(instruction);
+					return 0;
+				}
+			}
+			else if (!instruction->error && !addDataToCodeList(dataList, instruction->params, instruction->numParams, lineNum))
 			{
 				freeInstruction(instruction);
 				return 0;
 			}
+
+			break;
 		}
-		else if (!instruction->error && !addDataToCodeList(dataList, instruction->params, instruction->numParams, lineNum))
-		{
-			freeInstruction(instruction);
-			return 0;
+		default:
+			break;
 		}
-				
-		break;
 	}
-	default:
-		break;
-	}
-	
 	freeInstruction(instruction);
 	return retVal;
 }

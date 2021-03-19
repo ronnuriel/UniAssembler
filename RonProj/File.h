@@ -6,6 +6,12 @@
 #define FILE_ADDR_LEN 4
 #define FILE_VALUE_LEN 3
 
+typedef enum
+{
+	END = 0,
+	LINE_TOO_LONG,
+	OK
+} FILE_STATUS;
 
 int openInputFile(char* path);
 void closeInputFile();

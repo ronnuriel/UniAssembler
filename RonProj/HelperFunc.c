@@ -71,6 +71,8 @@ int isWhiteSpacesLine(char* str)
 }
 char* removeLeadingSpaces(char* str)
 {
+	if (!str)
+		return NULL;
 	while (*str != '\0' && isWhiteSpace(*str))
 		str++;
 
@@ -80,6 +82,9 @@ char* removeLeadingSpaces(char* str)
 
 void removeTrailingSpaces(char* str)
 {
+	if (!str)
+		return;
+
 	int i;
 
 	for (i = strlen(str) - 1; i >= 0 && isWhiteSpace(str[i]); i--);

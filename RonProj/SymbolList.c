@@ -37,8 +37,7 @@ void freeSymbolListRow(void* row)
 {
 	if (!row)
 		return;
-	printf("ROW: ");
-	printSymbolListRow(row);
+
 	free(((SymbolListRow*)row)->name);
 	free(row);
 }

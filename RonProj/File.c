@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "File.h"
+#include "Compiler.h"
 
 #define AS_STR ".as"
 #define OB_STR ".ob"
@@ -31,18 +32,25 @@ void closeInputFile()
 /* maxLength needs to be larger enough to have room for \n\0 */
 int readNextLine(char* str, int maxLength)
 {
+	int extraLength = maxLength + LINE_EXTRA_LENGTH;
 	if (!str || !inputFile)
 		return 0;
-
-	if (fgets(str, maxLength, inputFile))
-	{
-		if (str[strlen(str) - 1] == '\n')
-			str[strlen(str)- 1] = '\0'; /* remove \n in end of line */
-		return 1;
-	}
 		
-	
-	return 0;
+	if (!fgets(str, extraLength, inputFile))
+	{
+		return END;
+	}
+
+	if (strlen(str) > maxLength)
+	{
+		while (fgets(str, extraLength, inputFile) && strlen(str) > 80);
+		return LINE_TOO_LONG;
+	}
+
+	if (str[strlen(str) - 1] == '\n')
+		str[strlen(str) - 1] = '\0'; /* remove \n in end of line */
+	return OK;
+
 }
 int rewindInputFile()
 {

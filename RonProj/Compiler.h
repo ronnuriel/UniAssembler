@@ -3,6 +3,9 @@
 #include "SymbolList.h"
 #include "CodeList.h"
 
+#define MAX_LINE_LENGTH 80
+#define LINE_EXTRA_LENGTH 20
+
 int compileFile(char* inputFilePath);
 int compileInstruction(char* line, SymbolList* symbolList, CodeList* dataList, int lineNum);
 int compileOperation(char* line, SymbolList* symbolList, CodeList* operationList, int lineNum);

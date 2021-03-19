@@ -24,7 +24,8 @@ typedef enum
 	PE_PARAM_NOT_A_NUM = 1 << 5,
 	PE_PARAM_NOT_A_VALID_SYM = 1 << 6,
 	PE_PARAM_NOT_A_STR = 1 << 7,
-	PE_INVALID_INSTRUCTION = 1 << 8
+	PE_INVALID_INSTRUCTION = 1 << 8,
+	PE_MISSING_PARAMS = 1 << 9
 } ParserError;
 typedef struct
 {

@@ -67,9 +67,12 @@ Instruction* parseIntruction(char* line)
 			/* Error: invalid label */
 			ret->error |= PE_INVALID_SYM_NAME;
 		}
-		strcpy(ret->label, label);
-		ret->labelFlag = 1;
-		/* prepeare line for next parsing */
+		else
+		{
+			strcpy(ret->label, label);
+			ret->labelFlag = 1;
+			/* prepeare line for next parsing */
+		}
 		line = strtok(NULL, "");
 	}
 
@@ -90,6 +93,11 @@ Instruction* parseIntruction(char* line)
 	{
 		int i;
 		char* param = NULL;
+		if (line == NULL)
+		{
+			ret->error |= PE_MISSING_PARAMS;
+			return ret;
+		}
 		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
 
@@ -121,6 +129,7 @@ Instruction* parseIntruction(char* line)
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
 				free(ret->params);
+				ret->params = NULL;
 				ret->numParams = 0;
 
 				ret->error |= PE_PARAM_NOT_A_NUM;
@@ -153,7 +162,11 @@ Instruction* parseIntruction(char* line)
 	case INST_TYPE_ENTRY:
 	case INST_TYPE_EXTERN:
 	{
-
+		if (line == NULL)
+		{
+			ret->error |= PE_MISSING_PARAMS;
+			return ret;
+		}
 		if (!isValidSymbolName(line))
 		{
 			
@@ -189,6 +202,11 @@ Instruction* parseIntruction(char* line)
 	
 	case INST_TYPE_STRING:
 	{
+		if (line == NULL)
+		{
+			ret->error |= PE_MISSING_PARAMS;
+			return ret;
+		}
 		if (line[0] != '\"' || line[strlen(line) - 1] != '\"')
 		{
 			/* Error: invalid data string */

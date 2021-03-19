@@ -19,19 +19,8 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			printf("Error was found during compilation of %s.\n", argv[i]);
+			printf("Errors were found during compilation of %s.\n", argv[i]);
 		}
-	}
-
-	char* test = "e";
-	printf("working on %s\n", test);
-	if (compileFile(test))
-	{
-		printf("%s compiled successfully\n", test);
-	}
-	else
-	{
-		printf("Error was found during compilation of %s.\n", test);
 	}
 
 	printf("\ndone.\n");

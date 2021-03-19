@@ -147,6 +147,7 @@ Instruction* parseIntruction(char* line)
 		printf("malloc extern\n");
 		if (!isValidSymbolName(line))
 		{
+			printf("malloc failed - not valid symbol name\n");
 			/* Error: invalid data label */
 			ret->error = 5;
 			return ret;
@@ -174,7 +175,7 @@ Instruction* parseIntruction(char* line)
 		}
 		strcpy(ret->params[0], line);
 		ret->numParams = 1;
-		
+		printf("malloc succsess\n");
 		return ret;
 	}
 	

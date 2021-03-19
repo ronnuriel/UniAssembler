@@ -166,7 +166,8 @@ Instruction* parseIntruction(char* line)
 		}
 
 		printf("line 4 before malloc: %s\n", line);
-		ret->params[0] = malloc((sizeof(char) * strlen(line)) + 1);
+		printf("line 4 before len: %d\n", strlen(line));
+		ret->params[0] = malloc((sizeof(char*) * strlen(line)) + 1);/*ron added* */
 		if (!ret->params[0])
 		{
 			printf("malloc failed - params[0]\n");

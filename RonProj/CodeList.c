@@ -79,7 +79,7 @@ int getCodeListCurrentAddr(CodeList* clist)/*get func */
 
 void addStringToCodeList(CodeList* clist, char* str)/*adds the string into */
 {
-	for (int i = 0; i < strlen(str)+1; i++) // +1 to include \0
+	for (int i = 0; i < strlen(str)+1; i++) /* +1 to include \0*/
 	{
 		addCodeToList(clist, str[i], ARE_A, NULL);
 	}

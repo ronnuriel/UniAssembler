@@ -8,6 +8,7 @@
 #include "Compiler.h"
 int main(int argc, char** argv)
 {
+	/*
 	//CodeList* l = initCodeList(100);
 	//char* s1 = "0";
 	//char* s2 = "1";
@@ -20,6 +21,7 @@ int main(int argc, char** argv)
 	//addSymbolToList(l, "abc", 123, 'a');
 	//printSymbolList(l);
 	//printf("%d", generateBinaryWord(ADD, REGISTER_DIRECT, DIRECT));
+	*/
 	int i;
 	/*for (i = 1; i < argc; i++)
 	{

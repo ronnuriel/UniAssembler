@@ -38,7 +38,7 @@ void freeSymbolListRow(SymbolListRow* row)
 	free(row);
 }
 
-// returns 1 if match
+/* returns 1 if match*/
 int isRowNameMatch(char* name, SymbolListRow* row)
 {
 	if (!name || !row)

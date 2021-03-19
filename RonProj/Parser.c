@@ -17,19 +17,19 @@ LineTypeEnum detectLineType(char* line)
 	{
 		return INVALID_LINE;
 	}
-	if (line[0] == '\0')//EMPTY_LINE - strlen = 0
+	if (line[0] == '\0')/*EMPTY_LINE - strlen = 0*/
 	{
 		return EMPTY_LINE;
 	}
-	if (line[0] == ';')//COMMENT_LINE
+	if (line[0] == ';')/*COMMENT_LINE*/
 	{
 		return COMMENT_LINE;
 	}
-	if (isWhiteSpacesLine(line)) //EMPTY_LINE - filled with whitespaces
+	if (isWhiteSpacesLine(line)) /*EMPTY_LINE - filled with whitespaces*/
 	{
 		return EMPTY_LINE;
 	}
-	if (strchr(line,'.'))//INSTRUCTION_LINE
+	if (strchr(line,'.'))/*INSTRUCTION_LINE*/
 	{
 		return INSTRUCTION_LINE;
 	}
@@ -46,7 +46,7 @@ Instruction* parseIntruction(char* line)
 
 	ret->error = 0;
 	ret->labelFlag = 0;
-	ret->label[0] = '\0'; // empty label
+	ret->label[0] = '\0'; /* empty label*/
 	
 	ret->type = INST_TYPE_INVALID;
 	ret->params = NULL;
@@ -91,7 +91,7 @@ Instruction* parseIntruction(char* line)
 	{
 		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
-			// comma at start or end. error
+			/* comma at start or end. error*/
 		}
 		ret->numParams = countOccurrencesInString(',', line) + 1;
 		ret->params = (char**)malloc(sizeof(char*) * ret->numParams);
@@ -110,7 +110,7 @@ Instruction* parseIntruction(char* line)
 			removeTrailingSpaces(param);
 			if (!isValidNum(param))
 			{
-				// not a number. deallocate.
+				/* not a number. deallocate.*/
 				printf("not a valid num\n");
 				int j;
 				for (j = 0; j < i; j++)
@@ -125,7 +125,7 @@ Instruction* parseIntruction(char* line)
 			if (!ret->params[i])
 			{
 				printf("malloc failed - params[%d]\n", i);
-				//malloc failed. deallocate.
+				/*malloc failed. deallocate.*/
 				int j;
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
@@ -152,12 +152,12 @@ Instruction* parseIntruction(char* line)
 			return ret;
 		}
 		
-		// copy label
+		/* copy label*/
 		ret->params = (char**)malloc(sizeof(char*) * 1);
 		if (!ret->params)
 		{
 			printf("malloc failed - params\n");
-			// malloc failed
+			/* malloc failed*/
 			ret->error = 10;
 			return ret;
 		}
@@ -167,7 +167,7 @@ Instruction* parseIntruction(char* line)
 		if (!ret->params[0])
 		{
 			printf("malloc failed - params[0]\n");
-			// malloc failed
+			/* malloc failed*/
 			free(ret->params);
 			ret->error = 10;
 			return ret;
@@ -186,15 +186,15 @@ Instruction* parseIntruction(char* line)
 			ret->error = 5;
 			return ret;
 		}
-		// copy string from pos 1 to strlen-2
-		// remove "
+		/* copy string from pos 1 to strlen-2*/
+		/* remove "*/
 		line++;
 		line[strlen(line) - 1] = '\0';
 
 		ret->params = (char**)malloc(sizeof(char*) * 1);
 		if (!ret->params)
 		{
-			// malloc failed
+			/* malloc failed*/
 			ret->error = 10;
 			return ret;
 		}
@@ -203,7 +203,7 @@ Instruction* parseIntruction(char* line)
 		ret->params[0] = malloc((sizeof(char) * strlen(line))+ 1);
 		if (!ret->params[0])
 		{
-			// malloc failed
+			/* malloc failed*/
 			free(ret->params);
 			ret->error = 10;
 			return ret;
@@ -233,7 +233,7 @@ Operation* parseOperation(char* line)
 		return NULL;
 
 	ret->error = 0;
-	ret->label[0] = '\0'; // empty label
+	ret->label[0] = '\0'; /* empty label*/
 	ret->labelFlag = 0;
 	ret->sourceType = NONE;
 	ret->targetType = NONE;
@@ -267,7 +267,7 @@ Operation* parseOperation(char* line)
 	
 	
 	opcodeStr = strtok(line, " ");
-	// TODO: what if opcodeStr is NULL??
+	/* TODO: what if opcodeStr is NULL??*/
 	opcodeStr = removeLeadingSpaces(opcodeStr);
 	removeTrailingSpaces(opcodeStr);
 
@@ -311,7 +311,7 @@ Operation* parseOperation(char* line)
 	{
 		operand1 = NULL;
 	}
-	// now we know how many operands there is
+	/* now we know how many operands there is*/
 
 	
 	if (operand1 && operand2)

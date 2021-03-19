@@ -8,7 +8,7 @@
 
 typedef struct {
 	int address;
-	unsigned int word; // word is 12 bits. int will have enough space
+	unsigned int word; /* word is 12 bits. int will have enough space*/
 	char ARE;
 	char data[MAX_SYMBOL_LEN]; /* will hold label name in case of operand with label*/
 } CodeListRow;

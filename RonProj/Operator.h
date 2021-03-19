@@ -24,7 +24,7 @@ typedef enum
 	NUM_OF_OPERATORS
 } OperatorsEnum;
 
-//extern char operatorsNames[][NUM_OF_OPERATORS];
+/*extern char operatorsNames[][NUM_OF_OPERATORS];*/
 
 OperatorsEnum operatorStringToEnum(char* str);
 
@@ -50,7 +50,7 @@ typedef struct
 	unsigned char destOperandAddrMethods; /* bitwise storage */
 } OperatorData;
 
-//extern OperatorData operators[];
+/*extern OperatorData operators[];*/
 
 int getOperatorOpcode(OperatorsEnum op);
 int getOperatorFunct(OperatorsEnum op);

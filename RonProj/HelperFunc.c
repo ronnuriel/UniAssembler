@@ -33,7 +33,7 @@ int isValidNum(char* str)
 	if (isValidNumericSign(str[0]) && strlen(str) == 1)
 		return 0;
 
-	if (!isValidNumericSign(str[0]) && !isNumeric(str[0])) // first char not +,-, or digit
+	if (!isValidNumericSign(str[0]) && !isNumeric(str[0])) /* first char not +,-, or digit*/
 		return 0;
 
 	int i;
@@ -80,19 +80,19 @@ void removeTrailingSpaces(char* str)
  
 }
 
-// Function to remove all spaces from a given string 
+/* Function to remove all spaces from a given string */
 void removeSpaces(char* str)
 {
-	// To keep track of non-space character count 
+	/* To keep track of non-space character count */
 	int count = 0;
 
-	// Traverse the given string. If current character 
-	// is not space, then place it at index 'count++' 
+	/* Traverse the given string. If current character */
+	/* is not space, then place it at index 'count++' */
 	int i;
 	for(i=0; str[i]; i++)
 		if (str[i] != ' ')
-			str[count++] = str[i]; // here count is 
-								   // incremented 
+			str[count++] = str[i]; /* here count is */
+								   /* incremented */
 	str[count] = '\0';
 }
 int countOccurrencesInString(char c, char* str)

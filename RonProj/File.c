@@ -49,7 +49,7 @@ int rewindInputFile()
 	if (!inputFile)
 		return -1;
 	
-	return fseek(inputFile, 0, 0);//return 0 
+	return fseek(inputFile, 0, 0);/*return 0*/ 
 }
 
 
@@ -95,7 +95,7 @@ int createFileNames(char* filename, char** as, char** ob, char** ent, char** ext
 
 	} while (0);
 
-	// error occured
+	/*error occured*/
 	free(as);
 	free(ob);
 	free(ent);

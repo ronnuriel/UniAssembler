@@ -178,6 +178,10 @@ Instruction* parseIntruction(char* line)
 		}
 		strcpy(ret->params[0], line);
 		ret->numParams = 1;
+		printf("ret prints %s \n", ret->params[0]);
+		printf("ret prints %d\n", ret->error);
+		
+		
 		printf("malloc succsess\n");
 		return ret;
 	}

@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			printf("Errors were found during compilation of %s.\n", argv[i]);
+			printf("Errors were found during compilation of %s.\n", argv[i]);  
 		}
 	}
 

@@ -1,53 +1,61 @@
-OBJS	= CodeList.o Compiler.o File.o HelperFunc.o Instruction.o List.o Main.o Node.o Operator.o Parser.o Register.o Symbol.o SymbolList.o
-SOURCE	= CodeList.c Compiler.c File.c HelperFunc.c Instruction.c List.c Main.c Node.c Operator.c Parser.c Register.c Symbol.c SymbolList.c
-HEADER	= CodeList.h Compiler.h File.h HelperFunc.h Instruction.h List.h Main.h Node.h Operator.h Parser.h Register.h Symbol.h SymbolList.h
-OUT	= aaa
-CC	 = gcc
-FLAGS	 = -g -c -Wall
-LFLAGS	 = 
+# Basic compilation macros
+CC = gcc # GCC Compiler
+CFLAGS = -ansi -Wall -pedantic # Flags
+GLOBAL_DEPS =# Dependencies for everything
+EXE_DEPS = CodeList.o Compiler.o File.o HelperFunc.o Instruction.o List.o Main.o Node.o Operator.o Parser.o Register.o Symbol.o SymbolList.o # Deps for exe
 
-all: $(OBJS)
-	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
+## Executable
+Main: $(EXE_DEPS) $(GLOBAL_DEPS)
+	$(CC) -g $(EXE_DEPS) $(CFLAGS) -o $@
 
-CodeList.o: CodeList.c
-	$(CC) $(FLAGS) CodeList.c 
+## Main:
+Main.o: Main.c $(GLOBAL_DEPS)
+	$(CC) -c Main.c $(CFLAGS) -o $@
 
-Compiler.o: Compiler.c
-	$(CC) $(FLAGS) Compiler.c 
+## Code helper functions:
+CodeList.o: CodeList.c CodeList.h $(GLOBAL_DEPS)
+	$(CC) -c CodeList.c $(CFLAGS) -o $@
 
-File.o: File.c
-	$(CC) $(FLAGS) File.c 
+## First Pass:
+Compiler.o: Compiler.c Compiler.h $(GLOBAL_DEPS)
+	$(CC) -c Compiler.c $(CFLAGS) -o $@
 
-HelperFunc.o: HelperFunc.c
-	$(CC) $(FLAGS) HelperFunc.c 
+## Second Pass:
+File.o: File.c File.h $(GLOBAL_DEPS)
+	$(CC) -c File.c $(CFLAGS) -o $@
 
-Instruction.o: Instruction.c
-	$(CC) $(FLAGS) Instruction.c 
+## Instructions helper functions:
+HelperFunc.o: HelperFunc.c HelperFunc.h $(GLOBAL_DEPS)
+	$(CC) -c HelperFunc.c $(CFLAGS) -o $@
 
-List.o: List.c
-	$(CC) $(FLAGS) List.c 
+## Table:
+Instruction.o: Instruction.c Instruction.h $(GLOBAL_DEPS)
+	$(CC) -c Instruction.c $(CFLAGS) -o $@
 
-Main.o: Main.c
-	$(CC) $(FLAGS) Main.c 
+## Useful functions:
+List.o: List.c List.h $(GLOBAL_DEPS)
+	$(CC) -c List.c $(CFLAGS) -o $@
 
-Node.o: Node.c
-	$(CC) $(FLAGS) Node.c 
+## Output Files:
+Node.o: Node.c Node.h $(GLOBAL_DEPS)
+	$(CC) -c Node.c $(CFLAGS) -o $@
+## Output Files:
+Operator.o: Operator.c Operator.h $(GLOBAL_DEPS)
+	$(CC) -c Operator.c $(CFLAGS) -o $@
 
-Operator.o: Operator.c
-	$(CC) $(FLAGS) Operator.c 
+## Output Files:
+Parser.o: Parser.c Parser.h $(GLOBAL_DEPS)
+	$(CC) -c Parser.c $(CFLAGS) -o $@
+## Output Files:
+Register.o: Register.c Register.h $(GLOBAL_DEPS)
+	$(CC) -c Register.c $(CFLAGS) -o $@
+## Output Files:
+Symbol.o: Symbol.c Symbol.h $(GLOBAL_DEPS)
+	$(CC) -c Symbol.c $(CFLAGS) -o $@
+## Output Files:
+SymbolList.o: SymbolList.c SymbolList.h $(GLOBAL_DEPS)
+	$(CC) -c SymbolList.c $(CFLAGS) -o $@
 
-Parser.o: Parser.c
-	$(CC) $(FLAGS) Parser.c 
-
-Register.o: Register.c
-	$(CC) $(FLAGS) Register.c 
-
-Symbol.o: Symbol.c
-	$(CC) $(FLAGS) Symbol.c 
-
-SymbolList.o: SymbolList.c
-	$(CC) $(FLAGS) SymbolList.c 
-
-
+# Clean Target (remove leftovers)
 clean:
-	rm -f $(OBJS) $(OUT)
+	rm -rf *.o

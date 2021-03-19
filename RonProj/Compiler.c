@@ -158,9 +158,9 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 	}
 	case INST_TYPE_EXTERN:
 	{
-		printf("Extern11\n");
-		printf("instructin11: %d", instruction->type);
-		printf("instructin: %p", instruction);
+		printf("26Extern11\n");
+		printf("26instructin11: %d", instruction->type);
+		printf("26instructin: %p", instruction);
 		printf("26 params: %p ",( instruction->params)[0]);
 		if (getSymbolRowByName(symbolList, instruction->params[0]))
 		{

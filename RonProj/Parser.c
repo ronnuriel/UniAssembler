@@ -90,7 +90,7 @@ Instruction* parseIntruction(char* line)
 	case INST_TYPE_DATA:
 	{
 		int i;
-		char* param = NULL
+		char* param = NULL;
 		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
 			/* comma at start or end. error*/

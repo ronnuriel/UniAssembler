@@ -40,10 +40,11 @@ LineTypeEnum detectLineType(char* line)
 
 Instruction* parseIntruction(char* line)
 {
+
 	Instruction* ret = (Instruction*)malloc(sizeof(Instruction));
 	if (!ret)
 		return NULL;
-
+	printf("line 1: %s\n", line);
 	ret->error = 0;
 	ret->labelFlag = 0;
 	ret->label[0] = '\0'; /* empty label*/
@@ -71,7 +72,7 @@ Instruction* parseIntruction(char* line)
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
 
-		
+		printf("line 2: %s\n", line);
 
 	}
 
@@ -85,6 +86,7 @@ Instruction* parseIntruction(char* line)
 	line = strtok(NULL, "");
 	line = removeLeadingSpaces(line);
 	removeTrailingSpaces(line);
+	printf("line 3: %s\n", line);
 	switch (ret->type)
 	{
 	case INST_TYPE_DATA:
@@ -154,7 +156,7 @@ Instruction* parseIntruction(char* line)
 		}
 		
 		/* copy label*/
-		ret->params = (char**)malloc(sizeof(char*) * 1);
+		ret->params = (char**)malloc(sizeof(char*) + 1);
 		if (!ret->params)
 		{
 			printf("malloc failed - params\n");

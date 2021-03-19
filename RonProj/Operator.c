@@ -25,22 +25,22 @@ static char operatorsNames[][NUM_OF_OPERATORS] = {
 };
 
 static OperatorData operators[NUM_OF_OPERATORS] = {
-	{0, 0, operatorsNames[MOV], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
-	{1, 0, operatorsNames[CMP], IMMEDIATE | DIRECT | REGISTER_DIRECT, IMMEDIATE | DIRECT | REGISTER_DIRECT},
-	{2, 10, operatorsNames[ADD], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
-	{2, 11, operatorsNames[SUB], IMMEDIATE | DIRECT | REGISTER_DIRECT, DIRECT | REGISTER_DIRECT},
-	{4, 0, operatorsNames[LEA], DIRECT,                               DIRECT | REGISTER_DIRECT},
-	{5, 10, operatorsNames[CLR], 0,                                    DIRECT | REGISTER_DIRECT},
-	{5, 11, operatorsNames[NOT], 0,                                    DIRECT | REGISTER_DIRECT},
-	{5, 12, operatorsNames[INC], 0,                                    DIRECT | REGISTER_DIRECT},
-	{5, 13, operatorsNames[DEC], 0,                                    DIRECT | REGISTER_DIRECT},
-	{9, 10, operatorsNames[JMP], 0,                                    DIRECT | RELATIVE},
-	{9, 11, operatorsNames[BNE], 0,                                    DIRECT | RELATIVE},
-	{9, 12, operatorsNames[JSR], 0,                                    DIRECT | RELATIVE},
-	{12, 0, operatorsNames[RED],0,                                    DIRECT | REGISTER_DIRECT},
-	{13, 0, operatorsNames[PRN], 0,                                   IMMEDIATE | DIRECT | REGISTER_DIRECT},
-	{14, 0, operatorsNames[RTS], 0,                                   0},
-	{15, 0,operatorsNames[STOP], 0,                                   0}
+	{0, 0, operatorsNames[MOV], IMMEDIATE | DIRECT | REGISTER_DIRECT,     DIRECT | REGISTER_DIRECT},
+	{1, 0, operatorsNames[CMP], IMMEDIATE | DIRECT | REGISTER_DIRECT,     IMMEDIATE | DIRECT | REGISTER_DIRECT},
+	{2, 10, operatorsNames[ADD], IMMEDIATE | DIRECT | REGISTER_DIRECT,    DIRECT | REGISTER_DIRECT},
+	{2, 11, operatorsNames[SUB], IMMEDIATE | DIRECT | REGISTER_DIRECT,    DIRECT | REGISTER_DIRECT},
+	{4, 0, operatorsNames[LEA], DIRECT,                                   DIRECT | REGISTER_DIRECT},
+	{5, 10, operatorsNames[CLR], NONE,                                    DIRECT | REGISTER_DIRECT},
+	{5, 11, operatorsNames[NOT], NONE,                                    DIRECT | REGISTER_DIRECT},
+	{5, 12, operatorsNames[INC], NONE,                                    DIRECT | REGISTER_DIRECT},
+	{5, 13, operatorsNames[DEC], NONE,                                    DIRECT | REGISTER_DIRECT},
+	{9, 10, operatorsNames[JMP], NONE,                                    DIRECT | RELATIVE},
+	{9, 11, operatorsNames[BNE], NONE,                                    DIRECT | RELATIVE},
+	{9, 12, operatorsNames[JSR], NONE,                                    DIRECT | RELATIVE},
+	{12, 0, operatorsNames[RED], NONE,                                    DIRECT | REGISTER_DIRECT},
+	{13, 0, operatorsNames[PRN], NONE,                                    IMMEDIATE | DIRECT | REGISTER_DIRECT},
+	{14, 0, operatorsNames[RTS], NONE,                                    NONE},
+	{15, 0,operatorsNames[STOP], NONE,                                    NONE}
 };
 
 

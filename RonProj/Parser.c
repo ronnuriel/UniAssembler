@@ -65,8 +65,7 @@ Instruction* parseIntruction(char* line)
 		if (!isValidSymbolName(label))
 		{
 			/* Error: invalid label */
-			ret->error = 2;
-			return ret;
+			ret->error |= PE_INVALID_SYM_NAME;
 		}
 		strcpy(ret->label, label);
 		ret->labelFlag = 1;
@@ -93,15 +92,19 @@ Instruction* parseIntruction(char* line)
 		char* param = NULL;
 		if (line[0] == ',' || line[strlen(line) - 1] == ',')
 		{
+
 			/* comma at start or end. error*/
+			ret->error |= PE_COMMA_AT_START_OR_END;
+			return ret;
 		}
+
 		ret->numParams = countOccurrencesInString(',', line) + 1;
 		ret->params = (char**)malloc(sizeof(char*) * ret->numParams);
 		if (!ret->params)
 		{
-			printf("malloc failed - params\n");
-			ret->error = 10;
-			return ret;
+			/* allocation failed*/
+			free(ret);
+			return NULL;
 		}
 
 		
@@ -114,13 +117,13 @@ Instruction* parseIntruction(char* line)
 			{
 				int j;
 				/* not a number. deallocate.*/
-				printf("not a valid num\n");
-				
+								
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
 				free(ret->params);
+				ret->numParams = 0;
 
-				ret->error = 6;
+				ret->error |= PE_PARAM_NOT_A_NUM;
 				return ret;
 			}
 
@@ -128,16 +131,18 @@ Instruction* parseIntruction(char* line)
 			if (!ret->params[i])
 			{
 				int j;
-				printf("malloc failed - params[%d]\n", i);
+				
 				/*malloc failed. deallocate.*/
 				
 				for (j = 0; j < i; j++)
 					free(ret->params[j]);
-				free(ret->params);
 
-				ret->error = 10;
-				return ret;
+				free(ret->params);
+				free(ret);
+				
+				return NULL;
 			}
+
 			strcpy(ret->params[i], param);
 
 			param = strtok(NULL, ",");
@@ -151,31 +156,30 @@ Instruction* parseIntruction(char* line)
 
 		if (!isValidSymbolName(line))
 		{
-			printf("malloc failed - not valid symbol name\n");
-			/* Error: invalid data label */
-			ret->error = 5;
-			return ret;
+			
+			/* Error: param is not a valid symbol */
+			ret->error |= PE_PARAM_NOT_A_VALID_SYM;
+			
 		}
 		
 		/* copy label*/
 		ret->params = (char**)malloc(sizeof(char*) * 1);
 		if (!ret->params)
 		{
-			printf("malloc failed - params\n");
 			/* malloc failed*/
-			ret->error = 10;
-			return ret;
+			free(ret);
+			return NULL;
 		}
 
 
 		ret->params[0] = malloc((sizeof(char) * strlen(line)) + 1);
 		if (!ret->params[0])
 		{
-			printf("malloc failed - params[0]\n");
+			
 			/* malloc failed*/
 			free(ret->params);
-			ret->error = 10;
-			return ret;
+			free(ret);
+			return NULL;
 		}
 		strcpy(ret->params[0], line);
 		ret->numParams = 1;
@@ -188,11 +192,12 @@ Instruction* parseIntruction(char* line)
 		if (line[0] != '\"' || line[strlen(line) - 1] != '\"')
 		{
 			/* Error: invalid data string */
-			ret->error = 5;
+			ret->error |= PE_PARAM_NOT_A_STR;
 			return ret;
 		}
 		/* copy string from pos 1 to strlen-2*/
-		/* remove "*/
+		
+		/* remove " */
 		line++;
 		line[strlen(line) - 1] = '\0';
 
@@ -200,8 +205,8 @@ Instruction* parseIntruction(char* line)
 		if (!ret->params)
 		{
 			/* malloc failed*/
-			ret->error = 10;
-			return ret;
+			free(ret);
+			return NULL;
 		}
 
 		
@@ -210,8 +215,9 @@ Instruction* parseIntruction(char* line)
 		{
 			/* malloc failed*/
 			free(ret->params);
-			ret->error = 10;
-			return ret;
+			free(ret);
+			
+			return NULL;
 		}
 		strcpy(ret->params[0], line);
 		ret->numParams = 1;
@@ -221,7 +227,7 @@ Instruction* parseIntruction(char* line)
 
 	case INST_TYPE_INVALID:
 	{
-		ret->error = 3;
+		ret->error |= PE_INVALID_INSTRUCTION;
 		return ret;
 	}
 	}
@@ -247,8 +253,8 @@ Operation* parseOperation(char* line)
 	ret->labelFlag = 0;
 	ret->sourceType = NONE;
 	ret->targetType = NONE;
-
-
+	ret->source[0] = '\0';
+	ret->target[0] = '\0';
 
 
 	line = removeLeadingSpaces(line);
@@ -260,15 +266,12 @@ Operation* parseOperation(char* line)
 		if (!isValidSymbolName(label))
 		{
 			/* Error: invalid label */
-			ret->error = 2;
-			return ret;
+			ret->error |= PE_INVALID_SYM_NAME;
 		}
 		strcpy(ret->label, label);
 		ret->labelFlag = 1;
 		/* prepeare line for next parsing */
 		line = strtok(NULL, "");
-
-		
 
 	}
 	
@@ -283,11 +286,8 @@ Operation* parseOperation(char* line)
 	if (ret->opcode == OPERATOR_INVALID)
 	{
 		/* Error: invalid operand */
-		ret->error = 3;
-		return ret;
+		ret->error |= PE_INVALID_OPERATOR;
 	}
-
-	
 
 	
 
@@ -299,14 +299,11 @@ Operation* parseOperation(char* line)
 		removeTrailingSpaces(operand1);
 		
 
-
-		operand2 = strtok(NULL, "");
+		operand2 = strtok(NULL, ",");
 		if (operand2 && !isWhiteSpacesLine(operand2))
 		{
 			operand2 = removeLeadingSpaces(operand2);
 			removeTrailingSpaces(operand2);
-			
-
 		
 		}
 		else
@@ -334,14 +331,22 @@ Operation* parseOperation(char* line)
 		stripOperandData(ret->target, operand1, ret->targetType);
 	}
 
-	if (ret->sourceType == INVALID_ADDR_METHOD || ret->targetType == INVALID_ADDR_METHOD)
+	if (ret->sourceType == INVALID_ADDR_METHOD)
 	{
-		ret->error = 1;
+		ret->error |= PE_INVALID_SOURCE_OPERAND;
 	}
-
-
+	if (ret->targetType == INVALID_ADDR_METHOD)
+	{
+		ret->error |= PE_INVALID_TARGET_OPERAND;
+	}
+	
+	if (strtok(NULL, ","))
+	{
+		/* more than 2 operands found */
+		ret->error |= PE_TOO_MANY_OPERANDS;
+	}
+	
 	return ret;
-
 }
 
 

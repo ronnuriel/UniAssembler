@@ -9,13 +9,13 @@
 #include "stdio.h"
 
 #pragma warning(disable: 4996)
-CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data)/*creat row*/
+CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data, int lineNum)/*creat row*/
 {
 
 	CodeListRow* ret = (CodeListRow*)malloc(sizeof(CodeListRow));
 	if (!ret)
 		return NULL;
-	
+	ret->lineNum = lineNum;
 	ret->address = address;
 	ret->word = word;
 	ret->ARE = ARE;
@@ -29,9 +29,10 @@ CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* d
 
 	return ret;
 }
-void freeCodeListRow(void* row) /*free row from list*/
+void freeCodeListRow(CodeListRow* row) /*free row from list*/
 {
-	free(((CodeListRow *)row)->data);
+	printCodeListRow(row);
+	//free(row->data);
 	free(row);
 }
 CodeList* initCodeList(int startAddr) /* initialize*/
@@ -55,14 +56,26 @@ int getCodeListLength(CodeList* clist)
 {
 	return clist->list->length;
 }
-void addCodeToList(CodeList* clist, unsigned int word, char ARE, char* data)/*add code */
+int addCodeToList(CodeList* clist, unsigned int word, char ARE, char* data, int lineNum)/*add code */
 {
 	if (!clist)
 	{
-		return;
+		return 0;
 	}
-	addToList((void*)createCodeListRow(clist->currAddr, word, ARE, data), clist->list);
+
+	CodeListRow* newRow = createCodeListRow(clist->currAddr, word, ARE, data, lineNum);
+	if (!newRow)
+	{
+		return 0;
+	}
+	if (!addToList((void*)newRow, clist->list))
+	{
+		free(newRow);
+		return 0;
+	}
+
 	(clist->currAddr)++;
+	return 1;
 }
 
 void freeCodeList(CodeList* clist) /*free the list using the func freeCodeListRow */
@@ -78,70 +91,92 @@ int getCodeListCurrentAddr(CodeList* clist)/*get func */
 	return clist->currAddr;
 }
 
-void addStringToCodeList(CodeList* clist, char* str)/*adds the string into */
+int addStringToCodeList(CodeList* clist, char* str, int lineNum)/*adds the string into */
 {
+
 	unsigned int i;
 	for (i = 0; i < strlen(str)+1; i++) /* +1 to include \0*/
 	{
-		addCodeToList(clist, str[i], ARE_A, NULL);
+		if (!addCodeToList(clist, str[i], ARE_A, NULL, lineNum))
+		{
+			printf("Error: Allocation failed while adding string %s to data\n", str);
+			return 0;
+		}
 	}
+
+	return 1;
 }
-void addDataToCodeList(CodeList* clist, char** params, int numParams)
+int addDataToCodeList(CodeList* clist, char** params, int numParams, int lineNum)
 {
 	int i;
 	for (i = 0; i < numParams; i++) 
 	{
 		char* paramStr = params[i];
 
-		addCodeToList(clist, atoi(paramStr), ARE_A, NULL);
+		if (!addCodeToList(clist, atoi(paramStr), ARE_A, NULL, lineNum))
+		{
+			printf("Error: Allocation failed while adding value %s to data\n", paramStr);
+			return 0;
+		}
 	}
+	return 1;
 }
 
-void addOperationToCodeList(CodeList* clist, Operation* op)
+int addOperationToCodeList(CodeList* clist, Operation* op, int lineNum)
 {
-	addCodeToList(clist, generateBinaryWord(op->opcode, op->sourceType, op->targetType), ARE_A, NULL);
-	addOperandToCodeList(clist, op->sourceType, op->source);
-	addOperandToCodeList(clist, op->targetType, op->target);
+	if (!addCodeToList(clist, generateBinaryWord(op->opcode, op->sourceType, op->targetType), ARE_A, NULL, lineNum))
+	{
+		printf("Error: Allocation failed while adding operator to list\n");
+		return 0;
+	}
+	if (!addOperandToCodeList(clist, op->sourceType, op->source, lineNum))
+	{
+		printf("Error: Allocation failed while adding operand to list\n");
+		return 0;
+	}
+	if (!addOperandToCodeList(clist, op->targetType, op->target, lineNum))
+	{
+		printf("Error: Allocation failed while adding operand to list\n");
+		return 0;
+	}
+
+	return 1;
 }
 
-void addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value)
+int addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value, int lineNum)
 {
 	int valueNum = atoi(value);
 	switch (type)
 	{
 	case NONE:
 	{
-		break;
+		return 1;
 	}
 	case IMMEDIATE:
 	{
-		addCodeToList(clist, (unsigned int)valueNum, ARE_A, NULL);
-		break;
+		return addCodeToList(clist, (unsigned int)valueNum, ARE_A, NULL, lineNum);
 	}
 	case RELATIVE:
 	{
-		addCodeToList(clist, 0, ARE_RELATIVE, value);
-		break;
+		return addCodeToList(clist, 0, ARE_RELATIVE, value, lineNum);
 	}
 	case DIRECT:
 	{
-		addCodeToList(clist, 0, ARE_DIRECT, value); 
-		break;
+		return addCodeToList(clist, 0, ARE_DIRECT, value, lineNum);
 	}
 	case REGISTER_DIRECT:
 	{
-		addCodeToList(clist, RegisterNameToBinary(value), ARE_A, NULL);
-		break;
+		return addCodeToList(clist, RegisterNameToBinary(value), ARE_A, NULL, lineNum);
 	}
 	default:
-		break;
+		return 1;
 	}
 }
 
 void printCodeListRow(CodeListRow* row)
 {
 	unsigned int twelveBits = row->word & 0xFFF;
-	printf("Address: %d  word: %x ARE: %c", row->address, twelveBits, row->ARE);
+	printf("Address: %d  word: %x ARE: %c line: %d", row->address, twelveBits, row->ARE, row->lineNum);
 	if (row->data[0] != '\0')
 		printf(" data: %s", row->data);
 	
@@ -181,7 +216,7 @@ void printCodeList(CodeList* clist)
 int updateRelativeAndDirectLabelsInCodeList(CodeList* clist, SymbolList* symbolList)
 {
 	Node* t = clist->list->head;
-
+	int retVal = 1;
 	while (t)
 	{
 		CodeListRow* row = t->data;
@@ -191,7 +226,8 @@ int updateRelativeAndDirectLabelsInCodeList(CodeList* clist, SymbolList* symbolL
 			SymbolListRow* symbolRow = getSymbolRowByName(symbolList, row->data);
 			if (!symbolRow)
 			{
-				/* label not found! ERROR */
+				printf("Error: could not find symbol %s in line %d in symbol-list\n", row->data, row->lineNum);
+				retVal = 0;
 			}
 			else
 			{
@@ -215,7 +251,7 @@ int updateRelativeAndDirectLabelsInCodeList(CodeList* clist, SymbolList* symbolL
 		
 		t = getNodeNext(t);
 	}
-	return 1;
+	return retVal;
 }
 
 

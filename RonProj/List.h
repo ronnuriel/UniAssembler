@@ -9,7 +9,7 @@ typedef struct {
 } List;
 
 List* initList();
-void addToList(void* data, List* list);
+int addToList(void* data, List* list); /* return 0 if allocation failed. 1 if successful */
 
 void freeList(List* list, void deleter(void*));
 

@@ -1,34 +1,49 @@
 #include "List.h"
 #include <stdlib.h>
-
+#include "SymbolList.h"
 
 List* initList() {
 	List* newList = (List*)malloc(sizeof(List));
 	if (!newList)
 		return NULL;
+
 	newList->head = NULL;
 	newList->length = 0;
 	return newList;
  }
-void addToList(void* data, List* list) {
+int addToList(void* data, List* list) {
 	if (!list)
-		return;
+		return 0;
 
 	if (!list->head)
 	{
 		list->head = initNode(data, NULL);
+		if (!list->head)
+		{
+			return 0;
+		}
+		list->length++;
+		return 1;
 	}
 	else
 	{
 		Node* t = list->head;
+		
 		while (t->next) {
 			t = getNodeNext(t);
 		}
 
-		setNodeNext(t, initNode(data, NULL));
+		Node* newNode = initNode(data, NULL);
+		if (!newNode)
+		{
+			return 0;
+		}
+		setNodeNext(t, newNode);
+		list->length++;
+		return 1;
 	}
 
-	list->length++;
+	
 }
 
 
@@ -36,6 +51,7 @@ void addToList(void* data, List* list) {
 
 void freeList(List* list, void deleter(void *)) {
 
+	printf("freeList\n");
 	if (list)
 	{
 		Node* t = list->head;
@@ -43,6 +59,7 @@ void freeList(List* list, void deleter(void *)) {
 		while (t)
 		{
 			Node* del = t;
+			printCodeListRow(t->data);
 			deleter(t->data);
 			
 			t = getNodeNext(t);

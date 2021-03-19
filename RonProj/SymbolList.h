@@ -25,7 +25,7 @@ typedef struct {
 
 /* Symbol List Row*/
 SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attributes);
-void freeSymbolListRow(void* row);
+void freeSymbolListRow(SymbolListRow* row);
 int isRowOfType(SymbolListRow* row, SymbolAttributesEnum attribute);
 
 /* returns 1 if match */
@@ -33,7 +33,7 @@ int isRowNameMatch(char* name, SymbolListRow* row);
 
 /* Symbol List */
 SymbolList* initSymbolList();
-void addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes);
+int addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes);
 void freeSymbolList(SymbolList* slist);
 
 SymbolListRow* getSymbolRowByName(SymbolList* slist, char* name);

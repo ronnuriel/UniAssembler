@@ -18,7 +18,7 @@ SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attribut
 		if (!ret)
 			return NULL;
 
-		ret->name = (char*)malloc(sizeof(strlen(name) + 1));
+		ret->name = (char*)malloc(strlen(name) + 1);
 		if (!ret->name)
 		{
 			free(ret);
@@ -33,12 +33,13 @@ SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attribut
 	}
 }
 
-void freeSymbolListRow(void* row)
+void freeSymbolListRow(SymbolListRow* row)
 {
 	if (!row)
 		return;
-
-	free(((SymbolListRow*)row)->name);
+	printf("ROW: ");
+	printSymbolListRow(row);
+	free(row->name);
 	free(row);
 }
 
@@ -98,12 +99,28 @@ int getSymbolValueByName(SymbolList* slist, char* name, int* returnValue)
 	*returnValue = row->value;
 	return 1;
 }
-void addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes)
+int addSymbolToList(SymbolList* slist, char* name, int value, unsigned char attributes)
 {
 	if (!slist || !name)
-		return;
+	{
+		printf("Error: recieved null pointer\n");
+		return 0;
+	}
+		
+	SymbolListRow* newRow = createSymbolListRow(name, value, attributes);
+	if (!newRow)
+	{
+		printf("Error: Allocation failed while adding label: %s to list\n", name);
+		return 0;
+	}
 
-	addToList((void*)createSymbolListRow(name, value, attributes), slist->list);
+	if (!addToList((void*)newRow, slist->list))
+	{
+		printf("Error: Allocation failed while adding label: %s to list\n", name);
+		free(newRow);
+		return 0;
+	}
+	return 1;
 }
 
 void freeSymbolList(SymbolList* slist)
@@ -153,6 +170,7 @@ void printSymbolListRow(SymbolListRow* row)
 	printSymbolAttributes(row->attributes);
 	printf("\n");
 }
+
 void printSymbolList(SymbolList* slist)
 {
 	if (!slist)

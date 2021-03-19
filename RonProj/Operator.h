@@ -32,11 +32,11 @@ OperatorsEnum operatorStringToEnum(char* str);
 
 typedef enum 
 {
-	NONE = 0,
-	IMMEDIATE = 0x1,
-	DIRECT = (0x1<<1),
-	RELATIVE = (0x1 << 2),
-	REGISTER_DIRECT = (0x1 << 3),
+	NONE = 1,
+	IMMEDIATE = 0x1 << 1,
+	DIRECT = (0x1<<2),
+	RELATIVE = (0x1 << 3),
+	REGISTER_DIRECT = (0x1 << 4),
 	INVALID_ADDR_METHOD = (0x1 << 7)
 } AddrMethodEnum;
 

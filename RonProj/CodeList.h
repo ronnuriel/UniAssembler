@@ -8,6 +8,7 @@
 
 typedef struct {
 	int address;
+	int lineNum;
 	unsigned int word; /* word is 12 bits. int will have enough space*/
 	char ARE;
 	char data[MAX_SYMBOL_LEN]; /* will hold label name in case of operand with label*/
@@ -27,20 +28,20 @@ typedef enum {
 	ARE_DIRECT = 'D'
 } AREEnum;
 
-CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data);
-void freeCodeListRow(void* row);
+CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data, int lineNum);
+void freeCodeListRow(CodeListRow* row);
 CodeList* initCodeList(int startAddr);
 
 int getCodeListCurrentAddr(CodeList* clist);
 int getCodeListLength(CodeList* clist);
-void addCodeToList(CodeList* clist, unsigned int word, char ARE, char* data);
+int addCodeToList(CodeList* clist, unsigned int word, char ARE, char* data, int lineNum);
 void freeCodeList(CodeList* clist);
 
-void addStringToCodeList(CodeList* clist, char* str);
-void addDataToCodeList(CodeList* clist, char** params, int numParams);
+int addStringToCodeList(CodeList* clist, char* str , int lineNum);
+int addDataToCodeList(CodeList* clist, char** params, int numParams, int lineNum);
 
-void addOperationToCodeList(CodeList* clist, Operation* op);
-void addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value);
+int addOperationToCodeList(CodeList* clist, Operation* op, int lineNum);
+int addOperandToCodeList(CodeList* clist, AddrMethodEnum type, char* value, int lineNum);
 
 int updateRelativeAndDirectLabelsInCodeList(CodeList* clist, SymbolList* symbolList);
 

@@ -33,13 +33,13 @@ SymbolListRow* createSymbolListRow(char* name, int value, unsigned char attribut
 	}
 }
 
-void freeSymbolListRow(SymbolListRow* row)
+void freeSymbolListRow(void* row)
 {
 	if (!row)
 		return;
 	printf("ROW: ");
 	printSymbolListRow(row);
-	free(row->name);
+	free(((SymbolListRow*)row)->name);
 	free(row);
 }
 

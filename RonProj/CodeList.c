@@ -29,10 +29,9 @@ CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* d
 
 	return ret;
 }
-void freeCodeListRow(CodeListRow* row) /*free row from list*/
+void freeCodeListRow(void* row) /*free row from list*/
 {
 	printCodeListRow(row);
-	//free(row->data);
 	free(row);
 }
 CodeList* initCodeList(int startAddr) /* initialize*/
@@ -62,20 +61,22 @@ int addCodeToList(CodeList* clist, unsigned int word, char ARE, char* data, int 
 	{
 		return 0;
 	}
-
-	CodeListRow* newRow = createCodeListRow(clist->currAddr, word, ARE, data, lineNum);
-	if (!newRow)
+	else
 	{
-		return 0;
-	}
-	if (!addToList((void*)newRow, clist->list))
-	{
-		free(newRow);
-		return 0;
-	}
+		CodeListRow* newRow = createCodeListRow(clist->currAddr, word, ARE, data, lineNum);
+		if (!newRow)
+		{
+			return 0;
+		}
+		if (!addToList((void*)newRow, clist->list))
+		{
+			free(newRow);
+			return 0;
+		}
 
-	(clist->currAddr)++;
-	return 1;
+		(clist->currAddr)++;
+		return 1;
+	}
 }
 
 void freeCodeList(CodeList* clist) /*free the list using the func freeCodeListRow */

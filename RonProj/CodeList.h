@@ -29,7 +29,7 @@ typedef enum {
 } AREEnum;
 
 CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data, int lineNum);
-void freeCodeListRow(CodeListRow* row);
+void freeCodeListRow(void* row);
 CodeList* initCodeList(int startAddr);
 
 int getCodeListCurrentAddr(CodeList* clist);

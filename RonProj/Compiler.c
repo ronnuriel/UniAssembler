@@ -159,6 +159,8 @@ int compileInstruction(char *line, SymbolList* symbolList, CodeList* dataList)
 	case INST_TYPE_EXTERN:
 	{
 		printf("26Extern11\n");
+		printf("26Extern11\n");
+		printf("26Extern11\n");
 		printf("26instructin11: %d", instruction->type);
 		printf("26instructin: %p", instruction);
 		printf("26 params: %p ",( instruction->params)[0]);

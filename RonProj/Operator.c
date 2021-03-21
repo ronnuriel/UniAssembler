@@ -4,7 +4,7 @@
 #include "HelperFunc.h"
 
 #include <string.h>
-#pragma warning(disable: 4996)
+
 static char operatorsNames[][NUM_OF_OPERATORS] = {
 	"mov",
 	"cmp",

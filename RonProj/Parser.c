@@ -7,7 +7,7 @@
 #include "Instruction.h"
 #include <stdio.h>
 #include <malloc.h>
-#pragma warning(disable: 4996)
+
 
 
 

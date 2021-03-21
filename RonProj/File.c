@@ -9,7 +9,7 @@
 #define OB_STR ".ob"
 #define ENT_STR ".ent"
 #define EXT_STR ".ext"
-#pragma warning(disable: 4996)
+
 
 static FILE* inputFile = NULL;
 static FILE* outputFile = NULL;

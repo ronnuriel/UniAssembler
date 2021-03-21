@@ -8,7 +8,7 @@
 #include "File.h"
 #include "stdio.h"
 
-#pragma warning(disable: 4996)
+
 CodeListRow* createCodeListRow(int address, unsigned int word, char ARE, char* data, int lineNum)/*creat row*/
 {
 

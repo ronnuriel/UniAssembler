@@ -1,6 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
-/* checked */
+
 #include "Node.h"
 
 typedef struct {

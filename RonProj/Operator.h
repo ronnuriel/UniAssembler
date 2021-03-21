@@ -1,7 +1,7 @@
 #ifndef OPERATOR_H
 #define OPERATOR_H
 #include "Register.h"
-/* check */
+
 typedef enum
 {
 	OPERATOR_INVALID = -1,

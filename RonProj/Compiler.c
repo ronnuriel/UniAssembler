@@ -9,7 +9,6 @@
 #include "stdio.h"
 
 
-#pragma warning(disable: 4996)
 
 
 #define DC_START_POS 0

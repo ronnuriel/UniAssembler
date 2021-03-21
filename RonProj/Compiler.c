@@ -14,7 +14,7 @@
 #define DC_START_POS 0
 #define IC_START_POS 100
 #define MAX_OBJECT_FILE_CAPTION_LEN 50
-int compileFile(char* inputFilePath)
+int compileFile(char* inputFilePath)/*handeling the flow and files*/
 {
 
 	char* asFilePath = NULL,
@@ -405,7 +405,7 @@ int compileOperation(char* line, SymbolList* symbolList, CodeList* operationList
 	}
 }
 
-int updateEntries(SymbolList* symbolList)
+int updateEntries(SymbolList* symbolList)/*updates the entries*/
 {
 	char line[MAX_LINE_LENGTH];
 	int lineNum = 1;
@@ -440,7 +440,7 @@ int updateEntries(SymbolList* symbolList)
 	return retVal;
 }
 
-int generateObjectFile(CodeList* operationList, CodeList* dataList, char *path)
+int generateObjectFile(CodeList* operationList, CodeList* dataList, char *path)/*generate object file*/
 {
 	if (!openOutputFile(path))
 	{
@@ -464,7 +464,7 @@ int generateObjectFile(CodeList* operationList, CodeList* dataList, char *path)
 	}
 }
 
-int generateAttributeFile(SymbolList* symbolList, char* path, SymbolAttributesEnum attribute)
+int generateAttributeFile(SymbolList* symbolList, char* path, SymbolAttributesEnum attribute)/*generate attrubute*/
 {
 
 	if (doesSymbolListIncludeAttribute(symbolList, attribute))
@@ -477,7 +477,7 @@ int generateAttributeFile(SymbolList* symbolList, char* path, SymbolAttributesEn
 	return 1;
 }
 
-int generateExternalFile(CodeList* operationList, char* path)
+int generateExternalFile(CodeList* operationList, char* path)/*generate external*/
 {
 	if (doesCodeListIncludeExternals(operationList))
 	{
